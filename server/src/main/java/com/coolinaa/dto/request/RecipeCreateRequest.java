@@ -21,8 +21,8 @@ public class RecipeCreateRequest {
     @Size(max = 1000, message = "description must not exceed 1000 characters")
     private String description;
 
-    @NotBlank(message = "instruction must be not empty")
-    private String instruction;
+    @NotBlank(message = "instructions must be not empty")
+    private String instructions;
 
     @Positive(message = "preparation time must me positive number")
     private Integer preparationTime;
