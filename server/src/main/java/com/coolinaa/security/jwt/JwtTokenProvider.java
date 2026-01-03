@@ -107,6 +107,14 @@ public class JwtTokenProvider {
         return parseClaims(token, jwtSecret).getExpiration().getTime();
     }
 
+    public long getRefreshExpirationMs() {
+        return refreshExpirationMs;
+    }
+
+    public long getAccessExpirationMs() {
+        return jwtExpirationMs;
+    }
+
     private Claims parseClaims(String token, String secret) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey(secret))
