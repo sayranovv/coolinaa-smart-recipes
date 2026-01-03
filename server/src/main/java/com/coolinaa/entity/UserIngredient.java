@@ -35,7 +35,11 @@ public class UserIngredient {
     private OffsetDateTime expiresAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "unit_id")
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,9 +52,4 @@ public class UserIngredient {
             addedAt = OffsetDateTime.now();
         }
     }
-
-
-
-
-
 }

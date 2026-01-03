@@ -1,10 +1,15 @@
 package com.coolinaa.entity;
 
+import com.coolinaa.enums.RecipeStatus;
+import com.coolinaa.enums.RecipeStatusConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -15,15 +20,22 @@ import java.util.Set;
         @Index(name = "idx_recipes_user_id", columnList = "user_id"),
         @Index(name = "idx_recipes_category_id", columnList = "category_id")
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = {"user", "category", "ingredients", "reviews"})
 public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
+
+    @Column(nullable = false, length = 200)
+    private String title;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -45,8 +57,14 @@ public class Recipe {
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
+    @Builder.Default
     @Column(name = "is_public")
     private Boolean isPublic = true;
+
+    @Builder.Default
+    @Convert(converter = RecipeStatusConverter.class)
+    @Column(nullable = false, length = 20)
+    private RecipeStatus status = RecipeStatus.ACTIVE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
@@ -75,6 +93,12 @@ public class Recipe {
         }
         if (updatedAt == null) {
             updatedAt = OffsetDateTime.now();
+        }
+        if (status == null) {
+            status = RecipeStatus.ACTIVE;
+        }
+        if (isPublic == null) {
+            isPublic = true;
         }
     }
 

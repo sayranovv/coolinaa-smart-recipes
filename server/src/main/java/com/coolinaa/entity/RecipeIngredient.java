@@ -3,24 +3,31 @@ package com.coolinaa.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "recipe_ingredients", indexes = {
-        @Index(name = "idx_recipe_ingredients_recipe_id", columnList = "recipe+id"),
-        @Index(name = "idx_recipe_ingredients_ingredient_id", columnList = "ingredient_id")
+    @Index(name = "idx_recipe_ingredients_recipe_id", columnList = "recipe_id"),
+    @Index(name = "idx_recipe_ingredients_ingredient_id", columnList = "ingredient_id")
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = {"recipe", "ingredient", "unit"})
 public class RecipeIngredient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Column(precision = 10, scale = 2)

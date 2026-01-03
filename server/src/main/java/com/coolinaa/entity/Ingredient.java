@@ -57,6 +57,9 @@ public class Ingredient {
         if (updatedAt == null) {
             updatedAt = OffsetDateTime.now();
         }
+        if (isActive == null) {
+            isActive = true;
+        }
     }
 
     @PreUpdate

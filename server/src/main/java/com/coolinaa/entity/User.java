@@ -34,6 +34,7 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
+    @Builder.Default
     @Column(name = "is_active")
     private Boolean isActive = true;
 
@@ -51,6 +52,9 @@ public class User {
     protected void onCreate() {
         if  (createdAt == null) {
             createdAt = OffsetDateTime.now();
+        }
+        if (isActive == null) {
+            isActive = true;
         }
     }
 
