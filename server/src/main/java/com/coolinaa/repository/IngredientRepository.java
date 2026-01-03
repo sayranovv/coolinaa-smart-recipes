@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
 
-    Page<Ingredient> findByIsActiveTrueAndCategory(Integer categoryId, Pageable pageable);
+    Page<Ingredient> findByIsActiveTrueAndCategoryId(Integer categoryId, Pageable pageable);
     Page<Ingredient> findByIsActiveTrue(Pageable pageable);
     Boolean existsByName(String name);
 

@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Integer> {
 
-    List<RecipeIngredient> findByRecipeId(Integer recipeId);
-    void deleteByRecipeId(Integer recipeId);
+    List<RecipeIngredient> findByRecipe_Id(Integer recipeId);
+    void deleteByRecipe_Id(Integer recipeId);
 
 }

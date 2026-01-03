@@ -1,6 +1,7 @@
 package com.coolinaa.repository;
 
 import com.coolinaa.entity.Recipe;
+import com.coolinaa.enums.RecipeStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,15 +14,17 @@ import java.util.List;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
-    Page<Recipe> findByIsPublicTrueAndStatus(String status, Pageable pageable);
-    List<Recipe> findByUserId(Integer userId);
-    Page<Recipe> findByUserIdAndStatus(Integer userId, String status, Pageable pageable);
+    Page<Recipe> findByIsPublicTrueAndStatus(RecipeStatus status, Pageable pageable);
+    List<Recipe> findByUser_Id(Integer userId);
+    Page<Recipe> findByUser_IdAndStatus(Integer userId, RecipeStatus status, Pageable pageable);
 
-    @Query("SELECT r FROM Recipe r WHERE r.isPublic = true AND r.status = 'active' " +
+        @Query("SELECT r FROM Recipe r WHERE r.isPublic = true AND r.status = :status " +
             "AND (LOWER(r.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
             "OR LOWER(r.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
-    Page<Recipe> searchByTitleOrDescription(@Param("searchTerm") String searchTerm, Pageable pageable);
+        Page<Recipe> searchByTitleOrDescription(@Param("searchTerm") String searchTerm,
+                            @Param("status") RecipeStatus status,
+                            Pageable pageable);
 
-    Page<Recipe> findByPublicTrueAndStatusAndCategory(String status, Integer categoryId, Pageable pageable);
+    Page<Recipe> findByIsPublicTrueAndStatusAndCategoryId(RecipeStatus status, Integer categoryId, Pageable pageable);
 
 }

@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
-    Page<Review> findByRecipeId(Integer recipeId, Pageable pageable);
-    Optional<Review> findByRecipeIdAndUserId(Integer recipeId, Integer userId);
-    List<Review> findByUserId(Integer userId);
+    Page<Review> findByRecipe_Id(Integer recipeId, Pageable pageable);
+    Optional<Review> findByRecipe_IdAndUser_Id(Integer recipeId, Integer userId);
+    List<Review> findByUser_Id(Integer userId);
 
 }
