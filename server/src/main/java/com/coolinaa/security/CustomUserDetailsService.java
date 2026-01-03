@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(user, role);
     }
 
-    public UserDetails loadUserById(Long userId) throws UsernameNotFoundException {
+    public UserDetails loadUserById(Integer userId) throws UsernameNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
         UserRole role = UserRole.USER; // temp

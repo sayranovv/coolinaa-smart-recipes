@@ -14,7 +14,18 @@ public class UserService {
     }
 
     public User createUser(String username) {
-        return userRepository.save(new User(username));
+        User user = User.builder()
+                .username(username)
+                .email(username + "@example.com")
+                .passwordHash("placeholder")
+                .build();
+        return userRepository.save(user);
+    }
+
+    public User getByUsernameOrEmail(String usernameOrEmail) {
+        return userRepository.findByUsername(usernameOrEmail)
+                .or(() -> userRepository.findByEmail(usernameOrEmail))
+                .orElse(null);
     }
 
     public List<User> getAllUsers() {
