@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -25,5 +25,5 @@ public class UserIngredientRequest {
 
     private Integer unitId;
 
-    private OffsetDateTime expiresAt;
+    private LocalDate expiresAt;
 }
