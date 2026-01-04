@@ -12,6 +12,7 @@ import com.coolinaa.repository.RecipeRepository;
 import com.coolinaa.repository.RecipeCategoryRepository;
 import com.coolinaa.repository.UserIngredientRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ public class RecipeService {
     private final UnitService unitService;
     private final UserIngredientRepository userIngredientRepository;
 
+    @Transactional(readOnly = true)
     public Page<RecipeResponse> listPublic(int page, int size, String search, Integer categoryId) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Recipe> result;
@@ -45,7 +47,15 @@ public class RecipeService {
         } else {
             result = recipeRepository.findByIsPublicTrueAndStatus(RecipeStatus.ACTIVE, pageable);
         }
-        return result.map(RecipeMapper::toResponse);
+        // Materialize all data within transaction
+        List<RecipeResponse> responses = result.getContent().stream()
+                .map(r -> {
+                    Hibernate.initialize(r.getIngredients());
+                    Hibernate.initialize(r.getReviews());
+                    return RecipeMapper.toResponse(r);
+                })
+                .collect(Collectors.toList());
+        return new org.springframework.data.domain.PageImpl<>(responses, pageable, result.getTotalElements());
     }
 
     public Page<RecipeResponse> listUserRecipes(Integer userId, int page, int size, RecipeStatus status) {
@@ -63,6 +73,11 @@ public class RecipeService {
     public Recipe getEntity(Integer id) {
         return recipeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("recipe not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Recipe> loadAllPublic() {
+        return recipeRepository.findByIsPublicTrueAndStatus(RecipeStatus.ACTIVE, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
     }
 
         public List<com.coolinaa.dto.response.RecipeMatchResponse> matchByUser(Integer userId) {

@@ -16,6 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +52,11 @@ public class UserIngredientService {
 
         userIngredient.setQuantity(request.getQuantity());
         userIngredient.setUnit(unit);
-        userIngredient.setExpiresAt(request.getExpiresAt());
+        
+        OffsetDateTime expiresAt = request.getExpiresAt() != null 
+            ? request.getExpiresAt().atStartOfDay(ZoneId.systemDefault()).toOffsetDateTime()
+            : null;
+        userIngredient.setExpiresAt(expiresAt);
 
         return UserIngredientMapper.toResponse(userIngredientRepository.save(userIngredient));
     }
