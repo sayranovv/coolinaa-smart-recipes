@@ -1,11 +1,5 @@
 package com.coolinaa.config;
 
-import com.coolinaa.security.CustomUserDetailsService;
-import com.coolinaa.security.jwt.JwtAuthenticationFilter;
-import com.coolinaa.security.jwt.JwtTokenProvider;
-import com.coolinaa.security.jwt.RestAccessDeniedHandler;
-import com.coolinaa.security.jwt.RestAuthenticationEntryPoint;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,11 +12,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+
+import com.coolinaa.security.CustomUserDetailsService;
+import com.coolinaa.security.jwt.JwtAuthenticationFilter;
+import com.coolinaa.security.jwt.JwtTokenProvider;
+import com.coolinaa.security.jwt.RestAccessDeniedHandler;
+import com.coolinaa.security.jwt.RestAuthenticationEntryPoint;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableMethodSecurity
@@ -46,6 +48,12 @@ public class SecurityConfig {
                     "/swagger-ui.html",
                     "/swagger-ui/**"
                 ).permitAll()
+                .requestMatchers("GET", "/api/v1/recipes").permitAll()
+                .requestMatchers("GET", "/api/v1/recipes/**").permitAll()
+                .requestMatchers("GET", "/api/v1/ingredients").permitAll()
+                .requestMatchers("GET", "/api/v1/units").permitAll()
+                .requestMatchers("GET", "/api/v1/recipe-categories").permitAll()
+                .requestMatchers("GET", "/api/v1/ingredient-categories").permitAll()
                 .anyRequest().authenticated()
             )
             .exceptionHandling(handlers -> handlers
