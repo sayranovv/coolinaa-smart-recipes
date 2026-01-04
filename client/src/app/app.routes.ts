@@ -1,3 +1,59 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
+import { MainLayoutComponent } from './layout/main-layout.component';
+import { AuthLayoutComponent } from './layout/auth-layout.component';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+	{
+		path: '',
+		component: MainLayoutComponent,
+		canActivate: [authGuard],
+		children: [
+			{ path: '', pathMatch: 'full', redirectTo: 'feed' },
+			{
+				path: 'feed',
+				loadComponent: () => import('./features/feed/feed.page').then((m) => m.FeedPage)
+			},
+			{
+				path: 'match',
+				loadComponent: () => import('./features/match/match.page').then((m) => m.MatchPage)
+			},
+			{
+				path: 'fridge',
+				loadComponent: () => import('./features/fridge/fridge.page').then((m) => m.FridgePage)
+			},
+			{
+				path: 'recipes/create',
+				loadComponent: () => import('./features/recipes/recipe-create.page').then((m) => m.RecipeCreatePage)
+			},
+			{
+				path: 'recipes',
+				loadComponent: () => import('./features/recipes/recipe-list.page').then((m) => m.RecipeListPage)
+			},
+			{
+				path: 'recipes/:id',
+				loadComponent: () => import('./features/recipes/recipe-detail.page').then((m) => m.RecipeDetailPage)
+			},
+			{
+				path: 'profile',
+				loadComponent: () => import('./features/profile/profile.page').then((m) => m.ProfilePage)
+			}
+		]
+	},
+	{
+		path: 'auth',
+		component: AuthLayoutComponent,
+		children: [
+			{ path: '', pathMatch: 'full', redirectTo: 'login' },
+			{
+				path: 'login',
+				loadComponent: () => import('./features/auth/login.component').then((m) => m.LoginComponent)
+			},
+			{
+				path: 'register',
+				loadComponent: () => import('./features/auth/register.component').then((m) => m.RegisterComponent)
+			}
+		]
+	},
+	{ path: '**', redirectTo: '' }
+];
