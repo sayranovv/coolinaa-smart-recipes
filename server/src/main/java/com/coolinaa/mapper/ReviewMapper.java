@@ -10,14 +10,21 @@ public final class ReviewMapper {
         if (review == null) {
             return null;
         }
+        ReviewResponse.User user = null;
+        if (review.getUser() != null) {
+            user = ReviewResponse.User.builder()
+                    .id(review.getUser().getId())
+                    .username(review.getUser().getUsername())
+                    .build();
+        }
         return ReviewResponse.builder()
                 .id(review.getId())
                 .rating(review.getRating())
                 .comment(review.getComment())
-                .author(UserMapper.toResponse(review.getUser()))
+                .userId(review.getUser() != null ? review.getUser().getId() : null)
+                .user(user)
                 .recipeId(review.getRecipe() != null ? review.getRecipe().getId() : null)
                 .createdAt(review.getCreatedAt())
-                .updatedAt(review.getUpdatedAt())
                 .build();
     }
 }

@@ -1,11 +1,11 @@
 package com.coolinaa.dto.response;
 
+import java.time.OffsetDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.OffsetDateTime;
 
 @Data
 @NoArgsConstructor
@@ -16,9 +16,18 @@ public class ReviewResponse {
     private Integer id;
     private Integer rating;
     private String comment;
-    private UserResponse author;
+    private Integer userId;
+    private User user;
     private Integer recipeId;
     private OffsetDateTime createdAt;
-    private OffsetDateTime updatedAt;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class User {
+        private Integer id;
+        private String username;
+    }
 
 }
