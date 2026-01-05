@@ -44,17 +44,17 @@ import { Category } from '../../core/models/category.model';
           *ngFor="let item of viewMatches"
           class="rounded-2xl border border-stone-200 bg-white/90 p-4 shadow-sm space-y-2"
         >
-          <div class="flex items-start justify-between gap-3">
-            <div>
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex-1">
               <h2 class="text-lg font-semibold text-stone-900">{{ item.title }}</h2>
               <p class="text-sm text-stone-600">{{ item.description || 'Без описания' }}</p>
             </div>
-            <span class="text-xs px-2 py-1 rounded-full bg-accent-50 text-accent-800 border border-accent-100">
+            <span class="text-xs px-2 py-1 rounded-full bg-accent-50 text-accent-800 border border-accent-100 whitespace-nowrap flex-shrink-0">
               {{ item.matchPercentage || 0 | number: '1.0-0' }}%
             </span>
           </div>
-          <div class="text-xs text-stone-600 flex flex-wrap gap-2">
-            <span>Подходит: {{ item.matchedIngredients }}/{{ item.totalIngredients }}</span>
+          <div class="text-xs text-stone-600 flex flex-wrap gap-1">
+            <span class="px-2 py-1">Подходит: {{ item.matchedIngredients }}/{{ item.totalIngredients }}</span>
             <span *ngIf="item.missingIngredients?.length" class="px-2 py-1 bg-stone-100 rounded-full border border-stone-200">
               Не хватает: {{ item.missingIngredients?.length || 0 }}
             </span>

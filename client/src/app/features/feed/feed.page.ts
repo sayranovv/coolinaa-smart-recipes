@@ -59,9 +59,9 @@ import { Category } from '../../core/models/category.model';
           *ngFor="let recipe of recipes?.content"
           class="rounded-2xl border border-stone-200 bg-white/90 p-4 shadow-sm"
         >
-          <div class="flex items-start justify-between gap-3 mb-2">
-            <div class="space-y-1">
-              <div class="flex items-center gap-2 text-xs text-stone-500">
+          <div class="flex items-start justify-between gap-2 mb-2">
+            <div class="space-y-1 flex-1">
+              <div class="flex items-center gap-2 text-xs text-stone-500 flex-wrap">
                 <span>{{ recipe.categoryName || 'Без категории' }}</span>
                 <span>&bull;</span>
                 <span>{{ recipe.cookingTime ? recipe.cookingTime + ' мин' : 'Время не указано' }}</span>
@@ -69,9 +69,9 @@ import { Category } from '../../core/models/category.model';
               <h2 class="text-lg font-semibold text-stone-900">{{ recipe.title }}</h2>
               <p class="text-sm text-stone-600">{{ recipe.description || 'Описание скоро появится' }}</p>
             </div>
-            <a routerLink="/recipes/{{ recipe.id }}" class="text-sm text-accent-800">Открыть</a>
+            <a routerLink="/recipes/{{ recipe.id }}" class="text-sm text-accent-800 whitespace-nowrap flex-shrink-0">Открыть</a>
           </div>
-          <div class="flex flex-wrap gap-2 text-xs text-stone-600">
+          <div class="flex flex-wrap gap-1 text-xs text-stone-600">
             <span class="px-2 py-1 rounded-full bg-stone-100 border border-stone-200" *ngIf="recipe.averageRating">
               ★ {{ recipe.averageRating | number: '1.1-1' }}
             </span>

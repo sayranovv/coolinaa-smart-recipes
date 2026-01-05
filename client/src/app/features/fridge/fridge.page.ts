@@ -24,7 +24,6 @@ import { Unit } from '../../core/models/unit.model';
             <span>Температура</span>
             <strong class="text-lg text-white">+4°C</strong>
           </div>
-          <button class="fridge-button" (click)="add()">Добавить</button>
         </div>
       </div>
 
@@ -57,6 +56,7 @@ import { Unit } from '../../core/models/unit.model';
           </label>
         </div>
         <p *ngIf="error" class="text-sm text-red-200">{{ error }}</p>
+        <button class="fridge-button w-full" (click)="add()">Добавить</button>
       </div>
 
       <div class="frost-panel space-y-3" *ngIf="items.length; else empty">

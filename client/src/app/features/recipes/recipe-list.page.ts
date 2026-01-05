@@ -61,12 +61,12 @@ import { Category } from '../../core/models/category.model';
           *ngFor="let recipe of recipes?.content"
           class="rounded-2xl border border-stone-200 bg-white/90 p-4 space-y-2 shadow-sm"
         >
-          <div class="flex items-start justify-between gap-3">
-            <div>
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex-1">
               <h2 class="text-lg font-semibold text-stone-900">{{ recipe.title }}</h2>
               <p class="text-sm text-stone-600">{{ recipe.description || 'Описание скоро появится' }}</p>
             </div>
-            <span class="text-xs px-2 py-1 rounded-full bg-accent-50 text-accent-800 border border-accent-100">
+            <span class="text-xs px-2 py-1 rounded-full bg-accent-50 text-accent-800 border border-accent-100 whitespace-nowrap flex-shrink-0">
               {{ recipe.cookingTime ? recipe.cookingTime + ' мин' : 'Время не указано' }}
             </span>
           </div>
