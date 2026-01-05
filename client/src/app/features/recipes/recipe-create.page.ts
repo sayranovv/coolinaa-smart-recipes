@@ -1,11 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IngredientService } from '../../core/services/ingredient.service';
 import { RecipeService } from '../../core/services/recipe.service';
+import { RecipeCategoryService } from '../../core/services/recipe-category.service';
 import { Ingredient } from '../../core/models/ingredient.model';
 import { Unit } from '../../core/models/unit.model';
+import { Category } from '../../core/models/category.model';
 import { RecipeCreateRequest } from '../../core/models/recipe.model';
 
 @Component({
@@ -25,8 +27,11 @@ import { RecipeCreateRequest } from '../../core/models/recipe.model';
             <input class="w-full rounded-lg border border-stone-300 bg-white px-3 py-2" formControlName="title" />
           </label>
           <label class="space-y-1 text-sm text-stone-700">
-            <span>Категория (ID)</span>
-            <input type="number" class="w-full rounded-lg border border-stone-300 bg-white px-3 py-2" formControlName="categoryId" />
+            <span>Категория</span>
+            <select class="w-full rounded-lg border border-stone-300 bg-white px-3 py-2" formControlName="categoryId">
+              <option [ngValue]="null">Не выбрано</option>
+              <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
+            </select>
           </label>
           <label class="space-y-1 text-sm text-stone-700 sm:col-span-2">
             <span>Описание</span>
@@ -97,11 +102,13 @@ import { RecipeCreateRequest } from '../../core/models/recipe.model';
 export class RecipeCreatePage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly ingredientsApi = inject(IngredientService);
+  private readonly categoriesApi = inject(RecipeCategoryService);
   private readonly recipesApi = inject(RecipeService);
   private readonly router = inject(Router);
 
   protected ingredientsDict: Ingredient[] = [];
   protected units: Unit[] = [];
+  protected categories: Category[] = [];
   protected loading = false;
   protected error = '';
 
@@ -146,6 +153,7 @@ export class RecipeCreatePage implements OnInit {
   private loadDictionaries() {
     this.ingredientsApi.list({ size: 100 }).subscribe((res) => (this.ingredientsDict = res.content || []));
     this.ingredientsApi.units().subscribe((res) => (this.units = res));
+    this.categoriesApi.list().subscribe((res) => (this.categories = res));
   }
 
   submit() {
