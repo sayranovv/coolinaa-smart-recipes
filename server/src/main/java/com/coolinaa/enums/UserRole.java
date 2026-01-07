@@ -1,8 +1,8 @@
 package com.coolinaa.enums;
 
 public enum UserRole {
-    USER("ROLE_USER"),
-    ADMIN("ROLE_ADMIN");
+    user("ROLE_USER"),
+    admin("ROLE_ADMIN");
 
     private final String authority;
 
