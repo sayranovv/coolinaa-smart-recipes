@@ -31,4 +31,20 @@ public class UnitController {
                 .build();
         return ResponseEntity.ok(unitService.create(unit));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UnitResponse> update(@PathVariable Integer id, @RequestBody Map<String, Object> body) {
+        Unit payload = Unit.builder()
+                .name((String) body.get("name"))
+                .abbreviation((String) body.get("abbreviation"))
+                .isMetric(body.get("isMetric") == null ? null : (Boolean) body.get("isMetric"))
+                .build();
+        return ResponseEntity.ok(unitService.update(id, payload));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        unitService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

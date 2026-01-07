@@ -3,11 +3,7 @@ package com.coolinaa.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.coolinaa.dto.request.RecipeCategoryCreateRequest;
 import com.coolinaa.dto.response.RecipeCategoryResponse;
@@ -31,5 +27,17 @@ public class RecipeCategoryController {
     @PostMapping
     public ResponseEntity<RecipeCategoryResponse> create(@Valid @RequestBody RecipeCategoryCreateRequest request) {
         return ResponseEntity.ok(service.create(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RecipeCategoryResponse> update(@PathVariable Integer id,
+                                                         @Valid @RequestBody RecipeCategoryCreateRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
