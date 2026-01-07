@@ -26,15 +26,11 @@ public class CustomUserDetailsService implements UserDetailsService {
                     return new UsernameNotFoundException("user not found");
                 });
 
-        UserRole role = UserRole.USER; // temp
-
-        return new CustomUserDetails(user, role);
+        return new CustomUserDetails(user, user.getRole());
     }
 
     public UserDetails loadUserById(Integer userId) throws UsernameNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("user not found"));
-
-        UserRole role = UserRole.USER; // temp
-        return new CustomUserDetails(user, role);
+        return new CustomUserDetails(user, user.getRole());
     }
 }

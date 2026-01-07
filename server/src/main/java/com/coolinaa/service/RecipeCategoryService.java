@@ -37,6 +37,20 @@ public class RecipeCategoryService {
         return RecipeCategoryMapper.toResponse(category);
     }
 
+    public RecipeCategoryResponse update(Integer id, RecipeCategoryCreateRequest request) {
+        RecipeCategory category = findEntity(id);
+        category.setName(request.getName());
+        category.setDescription(request.getDescription());
+        category.setUpdatedAt(OffsetDateTime.now());
+        category = repository.save(category);
+        return RecipeCategoryMapper.toResponse(category);
+    }
+
+    public void delete(Integer id) {
+        RecipeCategory category = findEntity(id);
+        repository.delete(category);
+    }
+
     public RecipeCategory findEntity(Integer id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("recipe category not found"));
     }
