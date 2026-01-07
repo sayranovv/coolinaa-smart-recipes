@@ -34,6 +34,9 @@ public class Unit {
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private OffsetDateTime updatedAt;
+
     @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL, orphanRemoval = false)
     private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
 
@@ -45,6 +48,11 @@ public class Unit {
         if (createdAt == null) {
             createdAt = OffsetDateTime.now();
         }
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        updatedAt = OffsetDateTime.now();
     }
 
 }

@@ -38,6 +38,9 @@ public class IngredientCategory {
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private OffsetDateTime updatedAt;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = false)
     private Set<Ingredient> ingredients = new HashSet<>();
 
@@ -46,5 +49,10 @@ public class IngredientCategory {
         if (createdAt == null) {
             createdAt = OffsetDateTime.now();
         }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = OffsetDateTime.now();
     }
 }
