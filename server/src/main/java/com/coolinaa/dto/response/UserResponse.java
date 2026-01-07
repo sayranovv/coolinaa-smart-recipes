@@ -1,5 +1,6 @@
 package com.coolinaa.dto.response;
 
+import com.coolinaa.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class UserResponse {
     private String username;
     private String email;
     private Boolean isActive;
+    private UserRole role;
     private OffsetDateTime createdAt;
 
 }
