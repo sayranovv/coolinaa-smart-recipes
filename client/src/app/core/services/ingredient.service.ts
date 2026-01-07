@@ -12,6 +12,18 @@ export class IngredientService {
     return this.api.get<Page<Ingredient>>('/ingredients', { params });
   }
 
+  create(data: { name: string; description?: string; categoryId?: number }) {
+    return this.api.post<Ingredient>('/ingredients', data);
+  }
+
+  update(id: number, data: { name?: string; description?: string; categoryId?: number; isActive?: boolean }) {
+    return this.api.put<Ingredient>(`/ingredients/${id}`, data);
+  }
+
+  delete(id: number) {
+    return this.api.delete<void>(`/ingredients/${id}`);
+  }
+
   units() {
     return this.api.get<Unit[]>('/units');
   }

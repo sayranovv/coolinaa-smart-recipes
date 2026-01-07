@@ -3,22 +3,22 @@ import { ApiService } from './api.service';
 import { Category } from '../models/category.model';
 
 @Injectable({ providedIn: 'root' })
-export class RecipeCategoryService {
+export class IngredientCategoryService {
   private readonly api = inject(ApiService);
 
   list() {
-    return this.api.get<Category[]>('/recipe-categories');
+    return this.api.get<Category[]>('/ingredient-categories');
   }
 
   create(data: { name: string; description?: string }) {
-    return this.api.post<Category>('/recipe-categories', data);
+    return this.api.post<Category>('/ingredient-categories', data);
   }
 
   update(id: number, data: { name: string; description?: string }) {
-    return this.api.put<Category>(`/recipe-categories/${id}`, data);
+    return this.api.put<Category>(`/ingredient-categories/${id}`, data);
   }
 
   delete(id: number) {
-    return this.api.delete<void>(`/recipe-categories/${id}`);
+    return this.api.delete<void>(`/ingredient-categories/${id}`);
   }
 }

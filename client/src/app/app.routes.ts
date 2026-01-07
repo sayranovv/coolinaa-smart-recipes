@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 import { MainLayoutComponent } from './layout/main-layout.component';
 import { AuthLayoutComponent } from './layout/auth-layout.component';
 
@@ -17,6 +18,11 @@ export const routes: Routes = [
 			{
 				path: 'match',
 				loadComponent: () => import('./features/match/match.page').then((m) => m.MatchPage)
+			},
+			{
+				path: 'admin',
+				canActivate: [adminGuard],
+				loadComponent: () => import('./features/admin/admin.page').then((m) => m.AdminPage)
 			},
 			{
 				path: 'fridge',

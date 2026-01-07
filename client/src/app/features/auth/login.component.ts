@@ -77,7 +77,11 @@ export class LoginComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.router.navigate(['/feed']);
+          // Wait for next tick to ensure persistAuth has completed
+          setTimeout(() => {
+            const isAdmin = res.user?.role === 'admin';
+            this.router.navigate([isAdmin ? '/admin' : '/feed']);
+          }, 0);
         }
       });
   }

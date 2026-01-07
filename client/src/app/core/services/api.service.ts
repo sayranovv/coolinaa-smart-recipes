@@ -1,14 +1,24 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { CacheService } from './cache.service';
 
 const API_BASE = '/api/v1';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly http = inject(HttpClient);
+  private readonly cache = inject(CacheService);
 
   private url(path: string): string {
     return `${API_BASE}${path}`;
+  }
+
+  private getCacheKey(path: string, params?: Record<string, any>): string {
+    const queryString = params ? Object.entries(params)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([k, v]) => `${k}=${v}`)
+      .join('&') : '';
+    return `GET:${path}${queryString ? `?${queryString}` : ''}`;
   }
 
   get<T>(path: string, options: { params?: Record<string, any> } = {}) {
@@ -18,22 +28,34 @@ export class ApiService {
         )
       : undefined;
 
-    return this.http.get<T>(this.url(path), cleaned ? { ...options, params: cleaned } : options);
+    const cacheKey = this.getCacheKey(path, cleaned);
+    const source$ = this.http.get<T>(this.url(path), cleaned ? { ...options, params: cleaned } : options);
+    
+    // Cache with 5 minute TTL
+    return this.cache.get(cacheKey, source$, 5 * 60 * 1000);
   }
 
   post<T>(path: string, body: unknown, headers?: HttpHeaders) {
+    // Invalidate relevant cache on POST
+    this.cache.invalidateByPattern(`GET:${path.split('?')[0]}`);
     return this.http.post<T>(this.url(path), body, { headers });
   }
 
   put<T>(path: string, body: unknown) {
+    // Invalidate relevant cache on PUT
+    this.cache.invalidateByPattern(`GET:${path.split('?')[0]}`);
     return this.http.put<T>(this.url(path), body);
   }
 
   patch<T>(path: string, body: unknown) {
+    // Invalidate relevant cache on PATCH
+    this.cache.invalidateByPattern(`GET:${path.split('?')[0]}`);
     return this.http.patch<T>(this.url(path), body);
   }
 
   delete<T>(path: string) {
+    // Invalidate relevant cache on DELETE
+    this.cache.invalidateByPattern(`GET:${path.split('?')[0]}`);
     return this.http.delete<T>(this.url(path));
   }
 }

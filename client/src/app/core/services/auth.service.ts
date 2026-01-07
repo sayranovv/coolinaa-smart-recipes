@@ -1,4 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -12,8 +13,9 @@ export class AuthService {
   private readonly storage = inject(StorageService);
   private readonly router = inject(Router);
 
-  private readonly currentUserSignal = signal<User | null>(null);
+  private readonly currentUserSignal = signal<User | null | undefined>(undefined);
   readonly user = computed(() => this.currentUserSignal());
+  readonly user$ = toObservable(this.currentUserSignal);
   readonly isAuthenticated = computed(() => !!this.storage.getAccessToken());
 
   initialize() {
