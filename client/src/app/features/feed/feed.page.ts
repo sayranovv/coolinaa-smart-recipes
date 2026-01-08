@@ -1,17 +1,20 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { RecipeService } from '../../core/services/recipe.service';
 import { RecipeCategoryService } from '../../core/services/recipe-category.service';
 import { Recipe } from '../../core/models/recipe.model';
 import { Page } from '../../core/models/page.model';
 import { Category } from '../../core/models/category.model';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner.component';
 
 @Component({
   selector: 'app-feed-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, LoadingSpinnerComponent],
   template: `
     <section class="space-y-4">
       <div class="flex items-start justify-between gap-3">
@@ -28,7 +31,7 @@ import { Category } from '../../core/models/category.model';
           type="search"
           placeholder="Поиск по названию"
           [(ngModel)]="query"
-          (ngModelChange)="load()"
+          (ngModelChange)="onSearchChange($event)"
         />
         <div class="flex gap-2 flex-wrap text-sm text-stone-700">
           <button
@@ -51,14 +54,16 @@ import { Category } from '../../core/models/category.model';
         </div>
       </div>
 
-      <div *ngIf="loading" class="text-sm text-stone-500">Загружаем рецепты...</div>
-      <div *ngIf="error" class="text-sm text-red-500">{{ error }}</div>
-
-      <div class="grid gap-3" *ngIf="recipes?.content?.length">
-        <article
-          *ngFor="let recipe of recipes?.content"
-          class="rounded-2xl border border-stone-200 bg-white/90 p-4 shadow-sm"
-        >
+      @if (loading) {
+        <app-loading-spinner />
+      } @else if (error) {
+        <div class="text-sm text-red-500">{{ error }}</div>
+      } @else if (recipes?.content?.length) {
+        <div class="grid gap-3">
+          <article
+            *ngFor="let recipe of recipes?.content"
+            class="rounded-2xl border border-stone-200 bg-white/90 p-4 shadow-sm"
+          >
           <div class="flex items-start justify-between gap-2 mb-2">
             <div class="space-y-1 flex-1">
               <div class="flex items-center gap-2 text-xs text-stone-500 flex-wrap">
@@ -81,13 +86,16 @@ import { Category } from '../../core/models/category.model';
           </div>
         </article>
       </div>
-      <div *ngIf="!loading && !recipes?.content?.length" class="text-sm text-stone-500">Нет рецептов.</div>
+      } @else {
+        <div class="text-sm text-stone-500">Нет рецептов.</div>
+      }
     </section>
   `
 })
-export class FeedPage implements OnInit {
+export class FeedPage implements OnInit, OnDestroy {
   private readonly recipesApi = inject(RecipeService);
   private readonly categoriesApi = inject(RecipeCategoryService);
+  private searchSubject = new Subject<string>();
 
   protected recipes: Page<Recipe> | null = null;
   protected loading = false;
@@ -99,13 +107,28 @@ export class FeedPage implements OnInit {
   ngOnInit() {
     this.load();
     this.loadCategories();
+    
+    // Setup debounced search
+    this.searchSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.load();
+    });
+  }
+
+  ngOnDestroy() {
+    this.searchSubject.complete();
+  }
+
+  onSearchChange(value: string) {
+    this.searchSubject.next(value);
   }
 
   private loadCategories() {
     this.categoriesApi.list().subscribe({
       next: (res) => (this.categories = res),
       error: () => {
-        // categories are optional for rendering; keep silent but log state
         this.categories = [];
       }
     });

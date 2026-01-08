@@ -6,13 +6,14 @@ import { RecipeService } from '../../core/services/recipe.service';
 import { ReviewService, Review } from '../../core/services/review.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Recipe } from '../../core/models/recipe.model';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner.component';
 
 @Component({
   selector: 'app-recipe-detail-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, LoadingSpinnerComponent],
   template: `
-    <ng-container *ngIf="recipe; else missing">
+    <ng-container *ngIf="!loading && recipe; else loadingOrMissing">
       <section class="space-y-4">
         <a routerLink="/recipes" class="text-sm text-accent-800">Назад к списку</a>
         <div class="space-y-2">
@@ -44,11 +45,9 @@ import { Recipe } from '../../core/models/recipe.model';
           </ul>
         </div>
 
-        <!-- Reviews section -->
         <div class="space-y-4">
           <p class="text-lg font-semibold">Отзывы ({{ reviews.length }})</p>
           
-          <!-- Add review form -->
           <form *ngIf="auth.user() && !userHasReview" [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="rounded-2xl border border-stone-200 bg-white/90 p-4 space-y-3">
             <div>
               <label class="text-sm font-semibold text-stone-800">Оценка (1-5)</label>
@@ -67,7 +66,6 @@ import { Recipe } from '../../core/models/recipe.model';
             </button>
           </form>
 
-          <!-- Reviews list -->
           <div *ngIf="reviews.length" class="space-y-2">
             <div *ngFor="let review of reviews" class="rounded-2xl border border-stone-200 bg-white/90 p-3 text-sm">
               <div class="flex items-center justify-between mb-1">
@@ -86,10 +84,14 @@ import { Recipe } from '../../core/models/recipe.model';
         </div>
       </section>
     </ng-container>
-    <ng-template #missing>
+    <ng-template #loadingOrMissing>
       <section class="space-y-3">
-        <p class="text-lg font-semibold">Рецепт не найден</p>
-        <a routerLink="/recipes" class="text-accent-800 text-sm">Вернуться к списку</a>
+        @if (loading) {
+          <app-loading-spinner />
+        } @else if (error) {
+          <p class="text-lg font-semibold">{{ error }}</p>
+          <a routerLink="/feed" class="text-amber-800 text-sm">Вернуться к ленте</a>
+        }
       </section>
     </ng-template>
   `
@@ -103,6 +105,7 @@ export class RecipeDetailPage implements OnInit {
 
   protected recipe: Recipe | null = null;
   protected reviews: Review[] = [];
+  protected loading = false;
   protected error = '';
   protected submittingReview = false;
   protected deletingReviewId: number | null = null;
@@ -116,9 +119,16 @@ export class RecipeDetailPage implements OnInit {
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
+      this.loading = true;
       this.recipes.get(id).subscribe({
-        next: (res) => (this.recipe = res),
-        error: () => (this.error = 'Не удалось загрузить рецепт')
+        next: (res) => {
+          this.recipe = res;
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Рецепт не найден';
+          this.loading = false;
+        }
       });
       this.loadReviews(id);
     } else {

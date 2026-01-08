@@ -1,17 +1,31 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   template: `
     <section class="space-y-4">
       <div>
         <h1 class="text-2xl font-semibold">Профиль</h1>
         <p class="text-sm text-stone-500">Управление аккаунтом и настройками.</p>
       </div>
+
+      <a routerLink="/profile/my-recipes" class="block rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-rose-50 p-4 hover:shadow-lg hover:shadow-amber-200/50 transition">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-semibold text-stone-900">📖 Мои рецепты</h3>
+            <p class="text-sm text-stone-600 mt-1">Просмотр и управление вашими рецептами</p>
+          </div>
+          <svg class="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </a>
+
       <div class="rounded-2xl border border-stone-200 bg-white/90 p-4 space-y-3">
         <div class="flex items-center justify-between">
           <div>

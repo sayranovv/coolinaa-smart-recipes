@@ -4,11 +4,12 @@ import { RecipeService } from '../../core/services/recipe.service';
 import { RecipeCategoryService } from '../../core/services/recipe-category.service';
 import { RecipeMatch } from '../../core/models/recipe.model';
 import { Category } from '../../core/models/category.model';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner.component';
 
 @Component({
   selector: 'app-match-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingSpinnerComponent],
   template: `
     <section class="space-y-4">
       <div class="space-y-2">
@@ -36,7 +37,7 @@ import { Category } from '../../core/models/category.model';
         </button>
       </div>
 
-      <div *ngIf="loading" class="text-sm text-stone-500">Считаем совпадения...</div>
+      <div *ngIf="loading"><app-loading-spinner /></div>
       <div *ngIf="error" class="text-sm text-red-500">{{ error }}</div>
 
       <div class="space-y-3" *ngIf="viewMatches.length">
