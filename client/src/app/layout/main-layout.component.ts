@@ -18,9 +18,8 @@ import { AuthService } from '../core/services/auth.service';
   template: `
     <div class="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-amber-100 text-stone-900 flex flex-col">
       @if (!isAdmin()) {
-        <!-- Regular user layout -->
         <header class="px-4 py-3 flex items-center justify-between">
-          <div class="text-lg font-semibold tracking-tight">coolinaa</div>
+          <a routerLink="/feed" class="text-lg font-semibold tracking-tight hover:text-amber-700 transition cursor-pointer">coolinaa</a>
           <a routerLink="/recipes/create" class="text-sm px-3 py-1 rounded-full bg-amber-600 text-white font-semibold shadow-lg shadow-amber-200/60">
             Добавить рецепт
           </a>
@@ -49,7 +48,6 @@ import { AuthService } from '../core/services/auth.service';
           </a>
         </nav>
       } @else {
-        <!-- Admin layout -->
         <header class="px-4 py-3 flex items-center justify-between bg-white/80 backdrop-blur shadow">
           <div class="text-lg font-semibold tracking-tight">coolinaa <span class="text-amber-600">Admin</span></div>
           <button (click)="logout()" class="text-sm px-3 py-1 rounded-full bg-red-600 text-white font-semibold hover:bg-red-700 transition flex items-center gap-2">
@@ -72,7 +70,6 @@ export class MainLayoutComponent {
   protected readonly isAdmin = computed(() => this.auth.user()?.role === 'admin');
 
   constructor() {
-    // Redirect non-admins away from /admin
     effect(() => {
       const user = this.auth.user();
       const currentUrl = this.router.url;
