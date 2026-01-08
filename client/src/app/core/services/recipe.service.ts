@@ -22,4 +22,12 @@ export class RecipeService {
   matchMe() {
     return this.api.get<RecipeMatch[]>('/recipes/match/me');
   }
+
+  myRecipes(params: { page?: number; size?: number } = {}) {
+    return this.api.get<Page<Recipe>>('/recipes/my', { params });
+  }
+
+  delete(id: number) {
+    return this.api.delete<void>(`/recipes/${id}`);
+  }
 }
