@@ -33,16 +33,21 @@ export const routes: Routes = [
 				loadComponent: () => import('./features/recipes/recipe-create.page').then((m) => m.RecipeCreatePage)
 			},
 			{
-				path: 'recipes',
-				loadComponent: () => import('./features/recipes/recipe-list.page').then((m) => m.RecipeListPage)
-			},
-			{
 				path: 'recipes/:id',
 				loadComponent: () => import('./features/recipes/recipe-detail.page').then((m) => m.RecipeDetailPage)
 			},
 			{
+				path: 'recipes',
+				redirectTo: 'feed',
+				pathMatch: 'full'
+			},
+			{
 				path: 'profile',
 				loadComponent: () => import('./features/profile/profile.page').then((m) => m.ProfilePage)
+			},
+			{
+				path: 'profile/my-recipes',
+				loadComponent: () => import('./features/profile/my-recipes.page').then((m) => m.MyRecipesPage)
 			}
 		]
 	},
