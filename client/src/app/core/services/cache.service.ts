@@ -10,12 +10,13 @@ interface CacheEntry<T> {
 export class CacheService {
   private cache = new Map<string, CacheEntry<any>>();
   
-  // Default TTL: 5 minutes
   private readonly DEFAULT_TTL_MS = 5 * 60 * 1000;
 
-  /**
-   * Get cached value or execute and cache the observable
-   */
+  private readonly dependencies = new Map<string, string[]>([
+    ['/user-ingredients', ['/recipes/match']],
+    ['/recipes', ['/recipes', '/recipes/match']],
+  ]);
+
   get<T>(key: string, source$: Observable<T>, ttlMs = this.DEFAULT_TTL_MS): Observable<T> {
     const cached = this.getCached<T>(key);
     
@@ -28,9 +29,6 @@ export class CacheService {
     );
   }
 
-  /**
-   * Get cached value if exists and not expired
-   */
   private getCached<T>(key: string): T | null {
     const entry = this.cache.get(key);
     
@@ -38,7 +36,6 @@ export class CacheService {
       return null;
     }
 
-    // Check if expired
     const isExpired = Date.now() - entry.timestamp > (entry as any).ttl || 0;
     
     if (isExpired) {
@@ -49,9 +46,6 @@ export class CacheService {
     return entry.data as T;
   }
 
-  /**
-   * Set cache entry
-   */
   set<T>(key: string, data: T, ttlMs = this.DEFAULT_TTL_MS): void {
     this.cache.set(key, {
       data,
@@ -60,16 +54,10 @@ export class CacheService {
     } as any);
   }
 
-  /**
-   * Clear specific cache key
-   */
   invalidate(key: string): void {
     this.cache.delete(key);
   }
 
-  /**
-   * Invalidate multiple keys by pattern
-   */
   invalidateByPattern(pattern: string): void {
     const regex = new RegExp(pattern);
     for (const key of this.cache.keys()) {
@@ -79,9 +67,18 @@ export class CacheService {
     }
   }
 
-  /**
-   * Clear all cache
-   */
+  invalidateWithDependencies(path: string): void {
+    this.invalidateByPattern(`GET:${path.split('?')[0]}`);
+
+    for (const [depKey, targets] of this.dependencies.entries()) {
+      if (path.includes(depKey)) {
+        targets.forEach(target => {
+          this.invalidateByPattern(`GET:${target}`);
+        });
+      }
+    }
+  }
+
   clear(): void {
     this.cache.clear();
   }
