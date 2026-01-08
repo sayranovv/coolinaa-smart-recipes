@@ -31,31 +31,26 @@ export class ApiService {
     const cacheKey = this.getCacheKey(path, cleaned);
     const source$ = this.http.get<T>(this.url(path), cleaned ? { ...options, params: cleaned } : options);
     
-    // Cache with 5 minute TTL
     return this.cache.get(cacheKey, source$, 5 * 60 * 1000);
   }
 
   post<T>(path: string, body: unknown, headers?: HttpHeaders) {
-    // Invalidate relevant cache on POST
-    this.cache.invalidateByPattern(`GET:${path.split('?')[0]}`);
+    this.cache.invalidateWithDependencies(path);
     return this.http.post<T>(this.url(path), body, { headers });
   }
 
   put<T>(path: string, body: unknown) {
-    // Invalidate relevant cache on PUT
-    this.cache.invalidateByPattern(`GET:${path.split('?')[0]}`);
+    this.cache.invalidateWithDependencies(path);
     return this.http.put<T>(this.url(path), body);
   }
 
   patch<T>(path: string, body: unknown) {
-    // Invalidate relevant cache on PATCH
-    this.cache.invalidateByPattern(`GET:${path.split('?')[0]}`);
+    this.cache.invalidateWithDependencies(path);
     return this.http.patch<T>(this.url(path), body);
   }
 
   delete<T>(path: string) {
-    // Invalidate relevant cache on DELETE
-    this.cache.invalidateByPattern(`GET:${path.split('?')[0]}`);
+    this.cache.invalidateWithDependencies(path);
     return this.http.delete<T>(this.url(path));
   }
 }
