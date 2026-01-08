@@ -19,6 +19,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
     List<Recipe> findByUser_Id(Integer userId);
 
+    Page<Recipe> findByUser_Id(Integer userId, Pageable pageable);
+
     Page<Recipe> findByUser_IdAndStatus(Integer userId, RecipeStatus status, Pageable pageable);
 
     @Query("SELECT r FROM Recipe r WHERE r.isPublic = true AND r.status = :status " +

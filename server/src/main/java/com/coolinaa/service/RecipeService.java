@@ -1,17 +1,11 @@
 package com.coolinaa.service;
 
-import com.coolinaa.dto.request.RecipeCreateRequest;
-import com.coolinaa.dto.request.RecipeIngredientRequest;
-import com.coolinaa.dto.response.RecipeResponse;
-import com.coolinaa.entity.*;
-import com.coolinaa.enums.RecipeStatus;
-import com.coolinaa.exception.NotFoundException;
-import com.coolinaa.mapper.RecipeMapper;
-import com.coolinaa.repository.RecipeIngredientRepository;
-import com.coolinaa.repository.RecipeRepository;
-import com.coolinaa.repository.RecipeCategoryRepository;
-import com.coolinaa.repository.UserIngredientRepository;
-import lombok.RequiredArgsConstructor;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,11 +13,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.coolinaa.dto.request.RecipeCreateRequest;
+import com.coolinaa.dto.request.RecipeIngredientRequest;
+import com.coolinaa.dto.response.RecipeResponse;
+import com.coolinaa.entity.Ingredient;
+import com.coolinaa.entity.Recipe;
+import com.coolinaa.entity.RecipeCategory;
+import com.coolinaa.entity.RecipeIngredient;
+import com.coolinaa.entity.User;
+import com.coolinaa.entity.UserIngredient;
+import com.coolinaa.enums.RecipeStatus;
+import com.coolinaa.exception.NotFoundException;
+import com.coolinaa.mapper.RecipeMapper;
+import com.coolinaa.repository.RecipeCategoryRepository;
+import com.coolinaa.repository.RecipeIngredientRepository;
+import com.coolinaa.repository.RecipeRepository;
+import com.coolinaa.repository.UserIngredientRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +68,12 @@ public class RecipeService {
     public Page<RecipeResponse> listUserRecipes(Integer userId, int page, int size, RecipeStatus status) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Recipe> result = recipeRepository.findByUser_IdAndStatus(userId, status, pageable);
+        return result.map(RecipeMapper::toResponse);
+    }
+
+    public Page<RecipeResponse> listByUser(Integer userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Recipe> result = recipeRepository.findByUser_Id(userId, pageable);
         return result.map(RecipeMapper::toResponse);
     }
 
