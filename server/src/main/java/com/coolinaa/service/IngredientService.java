@@ -1,5 +1,12 @@
 package com.coolinaa.service;
 
+import java.time.OffsetDateTime;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.coolinaa.dto.response.IngredientResponse;
 import com.coolinaa.entity.Ingredient;
 import com.coolinaa.entity.IngredientCategory;
@@ -7,13 +14,8 @@ import com.coolinaa.exception.ConflictException;
 import com.coolinaa.exception.NotFoundException;
 import com.coolinaa.mapper.IngredientMapper;
 import com.coolinaa.repository.IngredientRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +24,19 @@ public class IngredientService {
     private final IngredientRepository ingredientRepository;
 
     public Page<IngredientResponse> getPage(Integer categoryId, int page, int size) {
+        return getPage(categoryId, null, page, size);
+    }
+
+    public Page<IngredientResponse> getPage(Integer categoryId, String search, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Ingredient> result = (categoryId != null)
-                ? ingredientRepository.findByIsActiveTrueAndCategoryId(categoryId, pageable)
-                : ingredientRepository.findByIsActiveTrue(pageable);
+        Page<Ingredient> result;
+        if (search != null && !search.isBlank()) {
+            result = ingredientRepository.findByIsActiveTrueAndNameContainingIgnoreCase(search, pageable);
+        } else if (categoryId != null) {
+            result = ingredientRepository.findByIsActiveTrueAndCategoryId(categoryId, pageable);
+        } else {
+            result = ingredientRepository.findByIsActiveTrue(pageable);
+        }
         return result.map(IngredientMapper::toResponse);
     }
 

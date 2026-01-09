@@ -32,9 +32,10 @@ public class IngredientController {
 
     @GetMapping
     public ResponseEntity<Page<IngredientResponse>> list(@RequestParam(defaultValue = "0") @Min(0) int page,
-                                                         @RequestParam(defaultValue = "20") @Min(1) int size,
-                                                         @RequestParam(required = false) Integer categoryId) {
-        return ResponseEntity.ok(ingredientService.getPage(categoryId, page, size));
+                                                         @RequestParam(defaultValue = "100") @Min(1) int size,
+                                                         @RequestParam(required = false) Integer categoryId,
+                                                         @RequestParam(required = false) String search) {
+        return ResponseEntity.ok(ingredientService.getPage(categoryId, search, page, size));
     }
 
     @PostMapping
