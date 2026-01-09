@@ -9,11 +9,12 @@ import { Ingredient } from '../../core/models/ingredient.model';
 import { Unit } from '../../core/models/unit.model';
 import { Category } from '../../core/models/category.model';
 import { RecipeCreateRequest } from '../../core/models/recipe.model';
+import { IngredientAutocompleteComponent } from '../../shared/ingredient-autocomplete.component';
 
 @Component({
   selector: 'app-recipe-create-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, IngredientAutocompleteComponent],
   template: `
     <section class="space-y-4">
       <div>
@@ -70,10 +71,12 @@ import { RecipeCreateRequest } from '../../core/models/recipe.model';
               [formGroupName]="i"
               class="rounded-xl border border-stone-200 bg-white/90 p-3 grid gap-2 sm:grid-cols-4 shadow-sm"
             >
-              <select class="w-full rounded-lg border border-stone-300 bg-white px-3 py-2" formControlName="ingredientId">
-                <option [ngValue]="null">Ингредиент</option>
-                <option *ngFor="let ing of ingredientsDict" [ngValue]="ing.id">{{ ing.name }}</option>
-              </select>
+              <label class="space-y-1 text-sm text-stone-700 sm:col-span-1">
+                <app-ingredient-autocomplete 
+                  placeholder="Ингредиент..."
+                  (selected)="onIngredientSelectedInForm($event, i)"
+                />
+              </label>
               <input type="number" min="0" step="0.1" class="w-full rounded-lg border border-stone-300 bg-white px-3 py-2" formControlName="quantity" placeholder="Количество" />
               <select class="w-full rounded-lg border border-stone-300 bg-white px-3 py-2" formControlName="unitId">
                 <option [ngValue]="null">Ед.</option>
@@ -150,8 +153,14 @@ export class RecipeCreatePage implements OnInit {
     this.ingredientsArray.removeAt(index);
   }
 
+  onIngredientSelectedInForm(ingredient: Ingredient, index: number) {
+    const control = this.ingredientsArray.at(index);
+    if (control) {
+      control.patchValue({ ingredientId: ingredient.id });
+    }
+  }
+
   private loadDictionaries() {
-    this.ingredientsApi.list({ size: 100 }).subscribe((res) => (this.ingredientsDict = res.content || []));
     this.ingredientsApi.units().subscribe((res) => (this.units = res));
     this.categoriesApi.list().subscribe((res) => (this.categories = res));
   }

@@ -5,11 +5,12 @@ import { UserIngredientService } from '../../core/services/user-ingredient.servi
 import { IngredientService } from '../../core/services/ingredient.service';
 import { Ingredient, UserIngredient, UserIngredientRequest } from '../../core/models/ingredient.model';
 import { Unit } from '../../core/models/unit.model';
+import { IngredientAutocompleteComponent } from '../../shared/ingredient-autocomplete.component';
 
 @Component({
   selector: 'app-fridge-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IngredientAutocompleteComponent],
   styleUrl: './fridge.page.css',
   template: `
     <section class="fridge-shell space-y-5 mt-4">
@@ -31,10 +32,11 @@ import { Unit } from '../../core/models/unit.model';
         <div class="grid gap-3 sm:grid-cols-2">
           <label class="field">
             <span>Ингредиент</span>
-            <select class="input" [(ngModel)]="form.ingredientId">
-              <option [ngValue]="undefined">Выберите</option>
-              <option *ngFor="let item of ingredients" [ngValue]="item.id">{{ item.name }}</option>
-            </select>
+            <app-ingredient-autocomplete 
+              variant="dark"
+              placeholder="Поиск ингредиентов..."
+              (selected)="onIngredientSelected($event)"
+            />
           </label>
 
           <label class="field">
@@ -87,7 +89,6 @@ export class FridgePage implements OnInit {
   private readonly ingredientsApi = inject(IngredientService);
 
   protected items: UserIngredient[] = [];
-  protected ingredients: Ingredient[] = [];
   protected units: Unit[] = [];
   protected error = '';
 
@@ -111,8 +112,11 @@ export class FridgePage implements OnInit {
   }
 
   private loadDictionaries() {
-    this.ingredientsApi.list({ size: 50 }).subscribe((res) => (this.ingredients = res.content || []));
     this.ingredientsApi.units().subscribe((res) => (this.units = res));
+  }
+
+  onIngredientSelected(ingredient: Ingredient) {
+    this.form.ingredientId = ingredient.id;
   }
 
   add() {
