@@ -1,12 +1,5 @@
 package com.coolinaa.config;
 
-import com.coolinaa.security.CustomUserDetailsService;
-import com.coolinaa.security.jwt.JwtAuthenticationFilter;
-import com.coolinaa.security.jwt.JwtTokenProvider;
-import com.coolinaa.security.jwt.RestAccessDeniedHandler;
-import com.coolinaa.security.jwt.RestAuthenticationEntryPoint;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +17,15 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
+import com.coolinaa.security.CustomUserDetailsService;
+import com.coolinaa.security.jwt.JwtAuthenticationFilter;
+import com.coolinaa.security.jwt.JwtTokenProvider;
+import com.coolinaa.security.jwt.RestAccessDeniedHandler;
+import com.coolinaa.security.jwt.RestAuthenticationEntryPoint;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -36,6 +38,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -109,5 +112,18 @@ public class SecurityConfig {
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new SimpleUrlLogoutSuccessHandler();
+    }
+
+    @Bean
+    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+        var config = new org.springframework.web.cors.CorsConfiguration();
+        config.setAllowedOriginPatterns(java.util.List.of("*"));
+        config.setAllowedMethods(java.util.List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
+        config.setAllowedHeaders(java.util.List.of("Authorization","Content-Type","X-Requested-With","Origin","Accept"));
+        config.setExposedHeaders(java.util.List.of("Authorization","Content-Type"));
+        config.setAllowCredentials(false);
+        var source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
