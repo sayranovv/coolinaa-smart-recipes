@@ -27,7 +27,6 @@ interface EditState<T> {
       </div>
 
       <div class="grid gap-4 lg:grid-cols-2">
-        <!-- Ingredient Categories -->
         <div class="rounded-2xl border border-stone-200 bg-white p-4 space-y-3">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Категории ингредиентов</h2>
@@ -57,7 +56,6 @@ interface EditState<T> {
           </div>
         </div>
 
-        <!-- Ingredients -->
         <div class="rounded-2xl border border-stone-200 bg-white p-4 space-y-3">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Ингредиенты</h2>
@@ -99,7 +97,6 @@ interface EditState<T> {
           </div>
         </div>
 
-        <!-- Units -->
         <div class="rounded-2xl border border-stone-200 bg-white p-4 space-y-3">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Единицы измерения</h2>
@@ -135,7 +132,6 @@ interface EditState<T> {
           </div>
         </div>
 
-        <!-- Recipe Categories -->
         <div class="rounded-2xl border border-stone-200 bg-white p-4 space-y-3">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Категории рецептов</h2>
@@ -201,7 +197,6 @@ export class AdminPage implements OnInit {
     this.recCatApi.list().subscribe((res) => (this.recipeCategories = res));
   }
 
-  // Ingredient categories
   addIngredientCategory() {
     if (!this.newIngCat.name) return;
     this.ingCatApi.create(this.newIngCat as { name: string; description?: string }).subscribe(() => {
@@ -233,7 +228,6 @@ export class AdminPage implements OnInit {
     });
   }
 
-  // Ingredients
   addIngredient() {
     if (!this.newIngredient.name) return;
     this.ingApi.create(this.newIngredient as { name: string; description?: string; categoryId?: number }).subscribe(() => {
@@ -272,7 +266,6 @@ export class AdminPage implements OnInit {
     });
   }
 
-  // Units
   addUnit() {
     if (!this.newUnit.name) return;
     this.unitApi.create(this.newUnit as { name: string; abbreviation?: string; isMetric?: boolean }).subscribe(() => {
@@ -306,7 +299,6 @@ export class AdminPage implements OnInit {
     });
   }
 
-  // Recipe categories
   addRecipeCategory() {
     if (!this.newRecCat.name) return;
     this.recCatApi.create(this.newRecCat as { name: string; description?: string }).subscribe(() => {

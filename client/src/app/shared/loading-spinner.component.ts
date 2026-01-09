@@ -6,11 +6,9 @@ import { Component } from '@angular/core';
   template: `
     <div class="flex flex-col items-center justify-center py-12">
       <div class="relative">
-        <!-- Logo -->
         <div class="text-3xl font-bold tracking-tight text-amber-600 mb-4 animate-pulse">
           coolinaa
         </div>
-        <!-- Spinner -->
         <div class="flex justify-center">
           <div class="spinner"></div>
         </div>

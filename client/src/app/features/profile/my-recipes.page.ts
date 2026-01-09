@@ -149,7 +149,7 @@ export class MyRecipesPage implements OnInit {
         this.showDeleteConfirm = false;
         this.deleting = false;
         this.recipeToDelete = null;
-        this.load(); // Reload list
+        this.load();
       },
       error: () => {
         this.error = 'Не удалось удалить рецепт';

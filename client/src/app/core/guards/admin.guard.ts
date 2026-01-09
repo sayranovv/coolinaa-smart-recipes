@@ -7,9 +7,8 @@ export const adminGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  // Wait for user to be loaded (not null/undefined)
   return auth.user$.pipe(
-    filter(user => user !== undefined), // Wait until initialized
+    filter(user => user !== undefined),
     take(1),
     map(user => {
       console.log('Admin guard - user:', user);

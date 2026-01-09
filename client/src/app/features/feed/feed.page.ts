@@ -22,7 +22,6 @@ import { LoadingSpinnerComponent } from '../../shared/loading-spinner.component'
           <h1 class="text-2xl font-semibold">Популярные рецепты</h1>
           <p class="text-sm text-stone-500">Подборка блюд, которые готовят прямо сейчас.</p>
         </div>
-        <a routerLink="/recipes" class="text-sm text-accent-700">Смотреть все</a>
       </div>
 
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
