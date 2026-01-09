@@ -1,0 +1,27 @@
+# Maven build output
+target/
+
+# Version control
+.git
+.gitignore
+
+# IDE configs
+.idea/
+.vscode/
+*.iml
+out/
+build/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Test reports
+surefire-reports/
+failsafe-reports/
+
+# Docker extras (keep main Dockerfile)
+Dockerfile-*
+docker-compose*.yml
