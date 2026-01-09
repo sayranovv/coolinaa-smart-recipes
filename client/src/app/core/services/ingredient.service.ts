@@ -8,7 +8,7 @@ import { Unit } from '../models/unit.model';
 export class IngredientService {
   private readonly api = inject(ApiService);
 
-  list(params: { page?: number; size?: number; categoryId?: number } = {}) {
+  list(params: { page?: number; size?: number; categoryId?: number; search?: string } = {}) {
     return this.api.get<Page<Ingredient>>('/ingredients', { params });
   }
 
