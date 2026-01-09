@@ -1,5 +1,12 @@
 package com.coolinaa.config;
 
+import com.coolinaa.security.CustomUserDetailsService;
+import com.coolinaa.security.jwt.JwtAuthenticationFilter;
+import com.coolinaa.security.jwt.JwtTokenProvider;
+import com.coolinaa.security.jwt.RestAccessDeniedHandler;
+import com.coolinaa.security.jwt.RestAuthenticationEntryPoint;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,15 +24,6 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
-import com.coolinaa.security.CustomUserDetailsService;
-import com.coolinaa.security.jwt.JwtAuthenticationFilter;
-import com.coolinaa.security.jwt.JwtTokenProvider;
-import com.coolinaa.security.jwt.RestAccessDeniedHandler;
-import com.coolinaa.security.jwt.RestAuthenticationEntryPoint;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.RequiredArgsConstructor;
-
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -38,28 +36,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/v1/auth/**",
-                    "/api/v1/health/**",
-                    "/v3/api-docs/**",
-                    "/swagger-ui.html",
-                    "/swagger-ui/**"
-                ).permitAll()
-                .requestMatchers("GET", "/api/v1/recipes").permitAll()
-                .requestMatchers("GET", "/api/v1/recipes/**").permitAll()
-                .requestMatchers("GET", "/api/v1/ingredients").permitAll()
-                .requestMatchers("GET", "/api/v1/units").permitAll()
-                .requestMatchers("GET", "/api/v1/recipe-categories").permitAll()
-                .requestMatchers("GET", "/api/v1/ingredient-categories").permitAll()
-                .anyRequest().authenticated()
-            )
-            .exceptionHandling(handlers -> handlers
-                .authenticationEntryPoint(restAuthenticationEntryPoint())
-                .accessDeniedHandler(restAccessDeniedHandler())
-            )
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/v1/auth/**",
+                                "/api/v1/health/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**"
+                        ).permitAll()
+                        .requestMatchers("GET", "/api/v1/recipes").permitAll()
+                        .requestMatchers("GET", "/api/v1/recipes/**").permitAll()
+                        .requestMatchers("GET", "/api/v1/ingredients").permitAll()
+                        .requestMatchers("GET", "/api/v1/units").permitAll()
+                        .requestMatchers("GET", "/api/v1/recipe-categories").permitAll()
+                        .requestMatchers("GET", "/api/v1/ingredient-categories").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(handlers -> handlers
+                        .authenticationEntryPoint(restAuthenticationEntryPoint())
+                        .accessDeniedHandler(restAccessDeniedHandler())
+                )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout

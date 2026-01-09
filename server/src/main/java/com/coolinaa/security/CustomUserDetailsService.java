@@ -1,7 +1,6 @@
 package com.coolinaa.security;
 
 import com.coolinaa.entity.User;
-import com.coolinaa.enums.UserRole;
 import com.coolinaa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

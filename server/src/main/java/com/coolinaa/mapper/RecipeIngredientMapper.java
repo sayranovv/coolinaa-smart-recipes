@@ -4,7 +4,8 @@ import com.coolinaa.dto.response.RecipeIngredientResponse;
 import com.coolinaa.entity.RecipeIngredient;
 
 public final class RecipeIngredientMapper {
-    private RecipeIngredientMapper() {}
+    private RecipeIngredientMapper() {
+    }
 
     public static RecipeIngredientResponse toResponse(RecipeIngredient entity) {
         if (entity == null) {

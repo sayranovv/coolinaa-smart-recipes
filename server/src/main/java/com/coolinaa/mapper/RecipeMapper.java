@@ -3,7 +3,6 @@ package com.coolinaa.mapper;
 import com.coolinaa.dto.response.RecipeIngredientResponse;
 import com.coolinaa.dto.response.RecipeResponse;
 import com.coolinaa.entity.Recipe;
-import com.coolinaa.entity.RecipeIngredient;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +10,8 @@ import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 public final class RecipeMapper {
-    private RecipeMapper() {}
+    private RecipeMapper() {
+    }
 
     public static RecipeResponse toResponse(Recipe recipe) {
         if (recipe == null) {

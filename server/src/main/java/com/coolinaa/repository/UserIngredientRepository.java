@@ -14,8 +14,11 @@ import java.util.Optional;
 public interface UserIngredientRepository extends JpaRepository<UserIngredient, Integer> {
 
     List<UserIngredient> findByUser_Id(Integer userId);
+
     Page<UserIngredient> findByUser_Id(Integer userId, Pageable pageable);
+
     Optional<UserIngredient> findByUser_IdAndIngredient_Id(Integer userId, Integer ingredientId);
+
     List<UserIngredient> findByUser_IdAndExpiresAtBefore(Integer userId, OffsetDateTime date);
 
 }

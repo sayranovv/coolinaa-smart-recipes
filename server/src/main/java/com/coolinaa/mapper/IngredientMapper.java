@@ -4,7 +4,8 @@ import com.coolinaa.dto.response.IngredientResponse;
 import com.coolinaa.entity.Ingredient;
 
 public final class IngredientMapper {
-    private IngredientMapper() {}
+    private IngredientMapper() {
+    }
 
     public static IngredientResponse toResponse(Ingredient ingredient) {
         if (ingredient == null) {

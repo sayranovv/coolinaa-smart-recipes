@@ -1,20 +1,14 @@
 package com.coolinaa.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "recipe_ingredients", indexes = {
-    @Index(name = "idx_recipe_ingredients_recipe_id", columnList = "recipe_id"),
-    @Index(name = "idx_recipe_ingredients_ingredient_id", columnList = "ingredient_id")
+        @Index(name = "idx_recipe_ingredients_recipe_id", columnList = "recipe_id"),
+        @Index(name = "idx_recipe_ingredients_ingredient_id", columnList = "ingredient_id")
 })
 @Getter
 @Setter

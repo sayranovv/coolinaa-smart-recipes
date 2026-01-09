@@ -8,9 +8,9 @@ import com.coolinaa.dto.response.UserResponse;
 import com.coolinaa.entity.User;
 import com.coolinaa.exception.ConflictException;
 import com.coolinaa.exception.UnauthorizedException;
+import com.coolinaa.mapper.UserMapper;
 import com.coolinaa.repository.UserRepository;
 import com.coolinaa.security.jwt.JwtTokenProvider;
-import com.coolinaa.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -82,7 +82,7 @@ public class AuthService {
                 .accessToken(access)
                 .refreshToken(refresh)
                 .tokenType("Bearer")
-            .expiresIn(jwtTokenProvider.getAccessExpirationMs())
+                .expiresIn(jwtTokenProvider.getAccessExpirationMs())
                 .refreshExpiresIn(jwtTokenProvider.getRefreshExpirationMs())
                 .user(user)
                 .build();

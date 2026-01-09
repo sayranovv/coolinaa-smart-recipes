@@ -1,7 +1,6 @@
 package com.coolinaa.controller;
 
 import com.coolinaa.entity.User;
-import com.coolinaa.repository.UserRepository;
 import com.coolinaa.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +16,7 @@ import java.util.List;
 class HealthCheck {
 
     private final UserService userService;
+
     public HealthCheck(UserService userService) {
         this.userService = userService;
     }

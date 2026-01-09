@@ -3,13 +3,7 @@ package com.coolinaa.entity;
 import com.coolinaa.enums.RecipeStatus;
 import com.coolinaa.enums.RecipeStatusConverter;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -44,13 +38,13 @@ public class Recipe {
     private String instructions;
 
     @Column(name = "preparation_time")
-    private Integer preparationTime; // min
+    private Integer preparationTime;
 
     @Column(name = "cooking_time")
-    private Integer cookingTime; // min
+    private Integer cookingTime;
 
     @Column(name = "difficulty_level")
-    private Integer difficultyLevel; // 1-5
+    private Integer difficultyLevel;
 
     private Integer servings;
 

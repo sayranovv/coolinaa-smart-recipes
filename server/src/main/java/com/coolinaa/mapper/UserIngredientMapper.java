@@ -6,7 +6,8 @@ import com.coolinaa.entity.UserIngredient;
 import java.time.OffsetDateTime;
 
 public final class UserIngredientMapper {
-    private UserIngredientMapper() {}
+    private UserIngredientMapper() {
+    }
 
     public static UserIngredientResponse toResponse(UserIngredient entity) {
         if (entity == null) {

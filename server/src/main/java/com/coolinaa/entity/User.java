@@ -2,12 +2,7 @@ package com.coolinaa.entity;
 
 import com.coolinaa.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -63,7 +58,7 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        if  (createdAt == null) {
+        if (createdAt == null) {
             createdAt = OffsetDateTime.now();
         }
         if (isActive == null) {

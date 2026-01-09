@@ -1,27 +1,9 @@
 package com.coolinaa.service;
 
-import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.hibernate.Hibernate;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.coolinaa.dto.request.RecipeCreateRequest;
 import com.coolinaa.dto.request.RecipeIngredientRequest;
 import com.coolinaa.dto.response.RecipeResponse;
-import com.coolinaa.entity.Ingredient;
-import com.coolinaa.entity.Recipe;
-import com.coolinaa.entity.RecipeCategory;
-import com.coolinaa.entity.RecipeIngredient;
-import com.coolinaa.entity.User;
-import com.coolinaa.entity.UserIngredient;
+import com.coolinaa.entity.*;
 import com.coolinaa.enums.RecipeStatus;
 import com.coolinaa.exception.NotFoundException;
 import com.coolinaa.mapper.RecipeMapper;
@@ -29,8 +11,19 @@ import com.coolinaa.repository.RecipeCategoryRepository;
 import com.coolinaa.repository.RecipeIngredientRepository;
 import com.coolinaa.repository.RecipeRepository;
 import com.coolinaa.repository.UserIngredientRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +47,6 @@ public class RecipeService {
         } else {
             result = recipeRepository.findByIsPublicTrueAndStatus(RecipeStatus.ACTIVE, pageable);
         }
-        // Materialize all data within transaction
         List<RecipeResponse> responses = result.getContent().stream()
                 .map(r -> {
                     Hibernate.initialize(r.getIngredients());
@@ -93,52 +85,52 @@ public class RecipeService {
         return recipeRepository.findByIsPublicTrueAndStatus(RecipeStatus.ACTIVE, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
     }
 
-        public List<com.coolinaa.dto.response.RecipeMatchResponse> matchByUser(Integer userId) {
+    public List<com.coolinaa.dto.response.RecipeMatchResponse> matchByUser(Integer userId) {
         List<UserIngredient> fridge = userIngredientRepository.findByUser_Id(userId);
         Set<Integer> ownedIds = fridge.stream().map(ui -> ui.getIngredient().getId()).collect(Collectors.toSet());
 
         List<Recipe> candidates = recipeRepository.findByIsPublicTrueAndStatus(RecipeStatus.ACTIVE, PageRequest.of(0, 200)).getContent();
         return candidates.stream()
-            .map(r -> buildMatch(r, ownedIds))
-            .sorted((a, b) -> Double.compare(b.getMatchPercentage(), a.getMatchPercentage()))
-            .collect(Collectors.toList());
-        }
+                .map(r -> buildMatch(r, ownedIds))
+                .sorted((a, b) -> Double.compare(b.getMatchPercentage(), a.getMatchPercentage()))
+                .collect(Collectors.toList());
+    }
 
-        private com.coolinaa.dto.response.RecipeMatchResponse buildMatch(Recipe recipe, Set<Integer> ownedIds) {
+    private com.coolinaa.dto.response.RecipeMatchResponse buildMatch(Recipe recipe, Set<Integer> ownedIds) {
         int total = recipe.getIngredients().size();
         int matched = (int) recipe.getIngredients().stream()
-            .filter(ri -> ownedIds.contains(ri.getIngredient().getId()))
-            .count();
+                .filter(ri -> ownedIds.contains(ri.getIngredient().getId()))
+                .count();
         double matchPct = total == 0 ? 0.0 : (matched * 100.0 / total);
 
         List<com.coolinaa.dto.response.MissingIngredientResponse> missing = recipe.getIngredients().stream()
-            .filter(ri -> !ownedIds.contains(ri.getIngredient().getId()))
-            .map(ri -> com.coolinaa.dto.response.MissingIngredientResponse.builder()
-                .ingredientId(ri.getIngredient().getId())
-                .ingredientName(ri.getIngredient().getName())
-                .quantity(ri.getQuantity())
-                .unitName(ri.getUnit() != null ? ri.getUnit().getName() : null)
-                .build())
-            .collect(Collectors.toList());
+                .filter(ri -> !ownedIds.contains(ri.getIngredient().getId()))
+                .map(ri -> com.coolinaa.dto.response.MissingIngredientResponse.builder()
+                        .ingredientId(ri.getIngredient().getId())
+                        .ingredientName(ri.getIngredient().getName())
+                        .quantity(ri.getQuantity())
+                        .unitName(ri.getUnit() != null ? ri.getUnit().getName() : null)
+                        .build())
+                .collect(Collectors.toList());
 
         double avgRating = recipe.getReviews().stream()
-            .mapToInt(r -> r.getRating() == null ? 0 : r.getRating())
-            .average().orElse(0.0);
+                .mapToInt(r -> r.getRating() == null ? 0 : r.getRating())
+                .average().orElse(0.0);
 
         return com.coolinaa.dto.response.RecipeMatchResponse.builder()
-            .recipeId(recipe.getId())
-            .title(recipe.getTitle())
-            .description(recipe.getDescription())
-            .imageUrl(recipe.getImageUrl())
-            .matchPercentage(matchPct)
-            .matchedIngredients(matched)
-            .totalIngredients(total)
-            .missingIngredients(missing)
-            .cookingTime(recipe.getCookingTime())
-            .difficultyLevel(recipe.getDifficultyLevel())
-            .averageRating(avgRating)
-            .build();
-        }
+                .recipeId(recipe.getId())
+                .title(recipe.getTitle())
+                .description(recipe.getDescription())
+                .imageUrl(recipe.getImageUrl())
+                .matchPercentage(matchPct)
+                .matchedIngredients(matched)
+                .totalIngredients(total)
+                .missingIngredients(missing)
+                .cookingTime(recipe.getCookingTime())
+                .difficultyLevel(recipe.getDifficultyLevel())
+                .averageRating(avgRating)
+                .build();
+    }
 
     @Transactional
     public RecipeResponse create(RecipeCreateRequest request, User author) {

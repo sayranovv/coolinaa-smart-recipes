@@ -4,7 +4,8 @@ import com.coolinaa.dto.response.UnitResponse;
 import com.coolinaa.entity.Unit;
 
 public final class UnitMapper {
-    private UnitMapper() {}
+    private UnitMapper() {
+    }
 
     public static UnitResponse toResponse(Unit unit) {
         if (unit == null) {

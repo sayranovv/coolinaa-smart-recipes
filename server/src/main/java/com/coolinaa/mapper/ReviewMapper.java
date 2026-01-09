@@ -4,7 +4,8 @@ import com.coolinaa.dto.response.ReviewResponse;
 import com.coolinaa.entity.Review;
 
 public final class ReviewMapper {
-    private ReviewMapper() {}
+    private ReviewMapper() {
+    }
 
     public static ReviewResponse toResponse(Review review) {
         if (review == null) {
