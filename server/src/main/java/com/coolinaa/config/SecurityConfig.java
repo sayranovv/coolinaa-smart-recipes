@@ -26,6 +26,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Основная конфигурация безопасности Spring Security.
+ * <p>
+ * Класс настраивает цепочку фильтров безопасности (SecurityFilterChain),
+ * управление сессиями (stateless для JWT), CORS и правила авторизации HTTP-запросов.
+ * </p>
+ */
+
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -34,6 +42,21 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
+
+    /**
+     * Определяет цепочку фильтров безопасности.
+     *
+     * <ul>
+     *   <li>Отключает CSRF (так как используются JWT токены).</li>
+     *   <li>Устанавливает Stateless управление сессиями.</li>
+     *   <li>Настраивает доступ к публичным эндпоинтам (auth, health, swagger, GET recipes).</li>
+     *   <li>Добавляет {@link JwtAuthenticationFilter} перед стандартным фильтром аутентификации.</li>
+     * </ul>
+     *
+     * @param http объект конфигурации HttpSecurity
+     * @return сконфигурированная цепочка фильтров
+     * @throws Exception при ошибках конфигурации безопасности
+     */
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -71,6 +94,10 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Создает провайдер аутентификации, использующий DAO для поиска пользователей
+     * и BCrypt для проверки паролей.
+     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
