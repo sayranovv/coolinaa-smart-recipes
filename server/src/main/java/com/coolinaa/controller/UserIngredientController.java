@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Контроллер для управления "холодильником" пользователя.
+ * Позволяет добавлять ингредиенты, которые есть у пользователя в наличии,
+ * просматривать их и удалять. Эти данные используются для подбора рецептов.
+ */
 @RestController
 @RequestMapping("/api/v1/user-ingredients")
 @RequiredArgsConstructor
@@ -25,6 +30,13 @@ public class UserIngredientController {
     private final UserIngredientService userIngredientService;
     private final UserService userService;
 
+    /**
+     * Получает постраничный список ингредиентов в "холодильнике" текущего пользователя.
+     *
+     * @param page Номер страницы.
+     * @param size Размер страницы.
+     * @return Страница {@link UserIngredientResponse}.
+     */
     @GetMapping
     public ResponseEntity<Page<UserIngredientResponse>> list(@RequestParam(defaultValue = "0") @Min(0) int page,
                                                              @RequestParam(defaultValue = "20") @Min(1) int size) {
@@ -32,18 +44,35 @@ public class UserIngredientController {
         return ResponseEntity.ok(userIngredientService.list(user.getId(), page, size));
     }
 
+    /**
+     * Получает полный список всех ингредиентов пользователя без пагинации.
+     *
+     * @return Список всех ингредиентов пользователя.
+     */
     @GetMapping("/all")
     public ResponseEntity<List<UserIngredientResponse>> listAll() {
         User user = currentUser();
         return ResponseEntity.ok(userIngredientService.listAll(user.getId()));
     }
 
+    /**
+     * Добавляет ингредиент в "холодильник" пользователя.
+     *
+     * @param request DTO {@link UserIngredientRequest} с ID ингредиента и его количеством/мерой.
+     * @return Добавленная запись.
+     */
     @PostMapping
     public ResponseEntity<UserIngredientResponse> add(@Valid @RequestBody UserIngredientRequest request) {
         User user = currentUser();
         return ResponseEntity.ok(userIngredientService.add(user, request));
     }
 
+    /**
+     * Удаляет ингредиент из списка пользователя.
+     *
+     * @param ingredientId ID ингредиента для удаления.
+     * @return 204 No Content.
+     */
     @DeleteMapping("/{ingredientId}")
     public ResponseEntity<Void> delete(@PathVariable Integer ingredientId) {
         User user = currentUser();
@@ -51,6 +80,9 @@ public class UserIngredientController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Получает текущего авторизованного пользователя.
+     */
     private User currentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {

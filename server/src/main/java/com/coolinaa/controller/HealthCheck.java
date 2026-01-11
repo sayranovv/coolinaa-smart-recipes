@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+/**
+ * Контроллер для проверки работоспособности сервиса (Health Check).
+ * Используется системами мониторинга (например, в Docker/Kubernetes).
+ */
 @Controller
 @RequestMapping("/api/v1/health")
 class HealthCheck {
@@ -21,11 +25,20 @@ class HealthCheck {
         this.userService = userService;
     }
 
+    /**
+     * Простой endpoint для проверки статуса сервиса.
+     * @return Строка "OK" и статус 200
+     */
     @GetMapping
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("OK");
     }
 
+    /**
+     * Тестовое создание пользователя (для отладки).
+     * @param username имя пользователя
+     * @return созданный пользователь
+     */
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestParam String username) {
         User user = userService.createUser(username);
