@@ -1,5 +1,8 @@
 package com.coolinaa.constant;
 
+/**
+ * Константы конфигурации безопасности и JWT.
+ */
 public class SecurityConstants {
     public static final String TOKEN_TYPE = "Bearer";
     public static final String AUTHORIZATION_HEADER = "Authorization";

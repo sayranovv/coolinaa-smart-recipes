@@ -1,5 +1,12 @@
 package com.coolinaa.constant;
 
+/**
+ * Константы сообщений об ошибках.
+ * <p>
+ * Используются для формирования ответов клиенту (REST API) и логирования
+ * исключительных ситуаций в security-слое.
+ * </p>
+ */
 public class ErrorMessages {
 
     public static final String INVALID_JWT = "invalid jwt token";
