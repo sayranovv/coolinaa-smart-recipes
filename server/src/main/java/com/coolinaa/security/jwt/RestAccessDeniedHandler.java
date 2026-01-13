@@ -12,6 +12,11 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 
 import java.io.IOException;
 
+/**
+ * Обработчик ошибки доступа (403 Forbidden).
+ * Вызывается, когда аутентифицированный пользователь пытается получить доступ к ресурсу,
+ * на который у него нет прав (например, обычный юзер стучится в админку).
+ */
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     private final ObjectMapper objectMapper;
@@ -20,6 +25,9 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Формирует JSON-ответ с ошибкой 403.
+     */
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         ApiErrorResponse body = ApiErrorResponse.builder()

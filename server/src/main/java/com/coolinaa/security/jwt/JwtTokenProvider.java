@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+/**
+ * Утилитарный компонент для работы с JWT (JSON Web Tokens).
+ * Отвечает за генерацию, парсинг и валидацию токенов доступа и обновления.
+ */
 @Component
 @Slf4j
 public class JwtTokenProvider {
@@ -26,11 +30,20 @@ public class JwtTokenProvider {
     @Value("${app.jwt.refresh-expiration-ms}")
     private long refreshExpirationMs;
 
+    /**
+     * Создает ключ для подписи токена на основе строкового секрета.
+     */
     private SecretKey getSigningKey(String secret) {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-
+    /**
+     * Генерирует Access-токен на основе объекта аутентификации.
+     * Включает username и роль пользователя в claims.
+     *
+     * @param authentication объект аутентификации Spring Security
+     * @return подписанная строка JWT
+     */
     public String generateAccessToken(Authentication authentication) {
         String username = authentication.getName();
         String role = authentication.getAuthorities().stream()
@@ -41,14 +54,24 @@ public class JwtTokenProvider {
         return buildToken(username, role, jwtSecret, jwtExpirationMs);
     }
 
+    /**
+     * Перегруженный метод для генерации токена по явным параметрам.
+     */
     public String generateAccessToken(String username, String role) {
         return buildToken(username, role, jwtSecret, jwtExpirationMs);
     }
 
+    /**
+     * Генерирует Refresh-токен для обновления доступа.
+     * Имеет больший срок жизни, чем access-токен.
+     */
     public String generateRefreshToken(String username) {
         return buildToken(username, "REFRESH", refreshSecret, refreshExpirationMs);
     }
 
+    /**
+     * Внутренний метод сборки JWT.
+     */
     private String buildToken(String username, String role, String secret, long expirationMs) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationMs);
@@ -82,6 +105,14 @@ public class JwtTokenProvider {
         return validateToken(token, refreshSecret);
     }
 
+    /**
+     * Общий метод валидации токена.
+     * Проверяет подпись, срок действия и структуру.
+     *
+     * @param token строка JWT
+     * @param secret секретный ключ для проверки подписи
+     * @return true, если токен валиден, иначе false (с логированием ошибки)
+     */
     public boolean validateToken(String token, String secret) {
         try {
             Jwts.parserBuilder()

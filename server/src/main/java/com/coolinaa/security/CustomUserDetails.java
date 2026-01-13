@@ -10,6 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Реализация интерфейса {@link UserDetails} для интеграции с Spring Security.
+ * Адаптирует сущность {@link User} к требованиям фреймворка безопасности.
+ */
 @Getter
 public class CustomUserDetails implements UserDetails {
 

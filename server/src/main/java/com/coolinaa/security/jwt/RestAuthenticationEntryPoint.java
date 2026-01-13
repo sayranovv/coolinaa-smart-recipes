@@ -12,6 +12,10 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
+/**
+ * Точка входа для неаутентифицированных запросов (401 Unauthorized).
+ * Вызывается, когда анонимный пользователь пытается получить доступ к защищенному ресурсу.
+ */
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper objectMapper;
@@ -20,6 +24,9 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Формирует JSON-ответ с ошибкой 401.
+     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         ApiErrorResponse body = ApiErrorResponse.builder()
