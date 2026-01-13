@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+/**
+ * Сервис управления отзывами и рейтингами.
+ */
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -26,6 +29,9 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final RecipeService recipeService;
 
+    /**
+     * Возвращает список всех отзывов к рецепту.
+     */
     public List<ReviewResponse> listByRecipe(Integer recipeId) {
         return reviewRepository.findByRecipe_Id(recipeId)
                 .stream()
@@ -33,12 +39,19 @@ public class ReviewService {
                 .toList();
     }
 
+    /**
+     * Постраничный вывод отзывов (для длинных обсуждений).
+     */
     public Page<ReviewResponse> listByRecipePaged(Integer recipeId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return reviewRepository.findByRecipe_Id(recipeId, pageable)
                 .map(ReviewMapper::toResponse);
     }
 
+    /**
+     * Создает новый отзыв.
+     * Запрещает одному пользователю оставлять несколько отзывов к одному рецепту.
+     */
     @Transactional
     public ReviewResponse create(Integer recipeId, User user, ReviewCreateRequest request) {
         if (reviewRepository.findByRecipe_IdAndUser_Id(recipeId, user.getId()).isPresent()) {
@@ -56,6 +69,10 @@ public class ReviewService {
         return ReviewMapper.toResponse(reviewRepository.save(review));
     }
 
+    /**
+     * Обновляет отзыв.
+     * Разрешено только автору отзыва.
+     */
     @Transactional
     public ReviewResponse update(Integer reviewId, User user, ReviewCreateRequest request) {
         Review review = reviewRepository.findById(reviewId)
@@ -69,6 +86,9 @@ public class ReviewService {
         return ReviewMapper.toResponse(reviewRepository.save(review));
     }
 
+    /**
+     * Удаляет отзыв.
+     */
     @Transactional
     public void delete(Integer reviewId, User user) {
         Review review = reviewRepository.findById(reviewId)

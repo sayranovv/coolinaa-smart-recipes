@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Базовый сервис управления пользователями.
+ * Используется в основном для внутренних нужд и административных функций.
+ */
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -23,6 +27,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Поиск пользователя по логину или email.
+     */
     public User getByUsernameOrEmail(String usernameOrEmail) {
         return userRepository.findByUsername(usernameOrEmail)
                 .or(() -> userRepository.findByEmail(usernameOrEmail))

@@ -20,6 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 
+/**
+ * Сервис аутентификации и регистрации пользователей.
+ * Отвечает за проверку учетных данных, создание новых аккаунтов и выдачу JWT токенов.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -29,6 +33,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    /**
+     * Регистрирует нового пользователя.
+     * Проверяет уникальность имени пользователя и email перед сохранением.
+     *
+     * @param request данные для регистрации (логин, email, пароль)
+     * @return токены доступа и информация о созданном пользователе
+     * @throws ConflictException если пользователь с таким именем или email уже существует
+     */
     public AuthResponse register(UserRegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new ConflictException(ErrorMessages.USERNAME_ALREADY_EXISTS);
@@ -49,6 +61,13 @@ public class AuthService {
         return buildTokens(user.getUsername(), UserMapper.toResponse(user));
     }
 
+    /**
+     * Выполняет вход пользователя в систему по логину/email и паролю.
+     *
+     * @param request учетные данные
+     * @return токены доступа и информация о пользователе
+     * @throws UnauthorizedException если учетные данные неверны
+     */
     public AuthResponse login(UserLoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmailOrUsername(), request.getPassword())
@@ -62,6 +81,13 @@ public class AuthService {
         return buildTokens(user.getUsername(), UserMapper.toResponse(user));
     }
 
+    /**
+     * Обновляет Access-токен с помощью валидного Refresh-токена.
+     *
+     * @param refreshToken токен обновления
+     * @return новая пара токенов
+     * @throws UnauthorizedException если токен невалиден или пользователь не найден
+     */
     public AuthResponse refresh(String refreshToken) {
         if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
             throw new UnauthorizedException(ErrorMessages.INVALID_JWT);
@@ -74,6 +100,9 @@ public class AuthService {
         return buildTokens(username, UserMapper.toResponse(user));
     }
 
+    /**
+     * Вспомогательный метод для генерации пары токенов (access + refresh).
+     */
     private AuthResponse buildTokens(String username, UserResponse user) {
         String access = jwtTokenProvider.generateAccessToken(username, "ROLE_USER");
         String refresh = jwtTokenProvider.generateRefreshToken(username);
@@ -88,6 +117,12 @@ public class AuthService {
                 .build();
     }
 
+    /**
+     * Получает информацию о текущем пользователе по его имени (из токена).
+     *
+     * @param username имя пользователя
+     * @return DTO пользователя
+     */
     public UserResponse currentUser(String username) {
         User user = userRepository.findByUsername(username)
                 .or(() -> userRepository.findByEmail(username))

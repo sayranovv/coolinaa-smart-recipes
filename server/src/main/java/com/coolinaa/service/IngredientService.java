@@ -15,16 +15,27 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 
+/**
+ * Сервис для управления ингредиентами.
+ * Обеспечивает поиск, фильтрацию и управление жизненным циклом ингредиентов.
+ */
 @Service
 @RequiredArgsConstructor
 public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
 
+    /**
+     * Получает страницу ингредиентов с фильтрацией по категории.
+     */
     public Page<IngredientResponse> getPage(Integer categoryId, int page, int size) {
         return getPage(categoryId, null, page, size);
     }
 
+    /**
+     * Получает страницу ингредиентов с поиском по имени и фильтрацией по категории.
+     * Поиск по имени имеет приоритет над фильтром по категории.
+     */
     public Page<IngredientResponse> getPage(Integer categoryId, String search, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Ingredient> result;
@@ -38,6 +49,10 @@ public class IngredientService {
         return result.map(IngredientMapper::toResponse);
     }
 
+    /**
+     * Создает новый ингредиент.
+     * @throws ConflictException если ингредиент с таким именем уже существует
+     */
     public IngredientResponse create(String name, String description, IngredientCategory category) {
         if (ingredientRepository.existsByName(name)) {
             throw new ConflictException("ingredient already exists");
@@ -53,6 +68,10 @@ public class IngredientService {
         return IngredientMapper.toResponse(ingredientRepository.save(ingredient));
     }
 
+    /**
+     * Обновляет данные ингредиента.
+     * Позволяет частично обновлять поля (null значения игнорируются).
+     */
     public IngredientResponse update(Integer id, String name, String description, IngredientCategory category, Boolean isActive) {
         Ingredient ingredient = ingredientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("ingredient not found"));
@@ -64,12 +83,18 @@ public class IngredientService {
         return IngredientMapper.toResponse(ingredientRepository.save(ingredient));
     }
 
+    /**
+     * Удаляет ингредиент.
+     */
     public void delete(Integer id) {
         Ingredient ingredient = ingredientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("ingredient not found"));
         ingredientRepository.delete(ingredient);
     }
 
+    /**
+     * Поиск сущности ингредиента. Используется другими сервисами (например, при создании рецепта).
+     */
     public Ingredient findEntity(Integer id) {
         return ingredientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("ingredient not found"));

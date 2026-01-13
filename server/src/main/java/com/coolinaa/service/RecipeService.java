@@ -25,6 +25,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Основной сервис для работы с рецептами.
+ * Реализует логику создания, обновления, поиска и подбора рецептов ("Умный подбор").
+ */
 @Service
 @RequiredArgsConstructor
 public class RecipeService {
@@ -36,6 +40,10 @@ public class RecipeService {
     private final UnitService unitService;
     private final UserIngredientRepository userIngredientRepository;
 
+    /**
+     * Получает публичный список активных рецептов с возможностью поиска и фильтрации.
+     * Используется для главной ленты приложения.
+     */
     @Transactional(readOnly = true)
     public Page<RecipeResponse> listPublic(int page, int size, String search, Integer categoryId) {
         Pageable pageable = PageRequest.of(page, size);
@@ -57,34 +65,59 @@ public class RecipeService {
         return new org.springframework.data.domain.PageImpl<>(responses, pageable, result.getTotalElements());
     }
 
+    /**
+     * Получает список рецептов конкретного пользователя с фильтрацией по статусу (например, только черновики).
+     */
     public Page<RecipeResponse> listUserRecipes(Integer userId, int page, int size, RecipeStatus status) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Recipe> result = recipeRepository.findByUser_IdAndStatus(userId, status, pageable);
         return result.map(RecipeMapper::toResponse);
     }
 
+    /**
+     * Получает все рецепты пользователя без учета статуса.
+     */
     public Page<RecipeResponse> listByUser(Integer userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Recipe> result = recipeRepository.findByUser_Id(userId, pageable);
         return result.map(RecipeMapper::toResponse);
     }
 
+    /**
+     * Получает рецепт по ID.
+     * @throws NotFoundException если рецепт не найден.
+     */
     public RecipeResponse getById(Integer id) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("recipe not found"));
         return RecipeMapper.toResponse(recipe);
     }
 
+    /**
+     * Получает сущность рецепта. Для внутреннего использования.
+     */
     public Recipe getEntity(Integer id) {
         return recipeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("recipe not found"));
     }
 
+    /**
+     * Загружает все публичные рецепты (используется для тяжелых операций анализа).
+     */
     @Transactional(readOnly = true)
     public List<Recipe> loadAllPublic() {
         return recipeRepository.findByIsPublicTrueAndStatus(RecipeStatus.ACTIVE, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
     }
 
+    /**
+     * Алгоритм подбора рецептов на основе продуктов в "холодильнике" пользователя.
+     * <p>
+     * Сравнивает ингредиенты пользователя с составом каждого публичного рецепта.
+     * Сортирует результаты по проценту совпадения (matchPercentage).
+     * </p>
+     * @param userId ID пользователя для подбора
+     * @return список рецептов с метаданными о совпадении
+     */
     public List<com.coolinaa.dto.response.RecipeMatchResponse> matchByUser(Integer userId) {
         List<UserIngredient> fridge = userIngredientRepository.findByUser_Id(userId);
         Set<Integer> ownedIds = fridge.stream().map(ui -> ui.getIngredient().getId()).collect(Collectors.toSet());
@@ -96,6 +129,9 @@ public class RecipeService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Вспомогательный метод расчета совпадения для одного рецепта.
+     */
     private com.coolinaa.dto.response.RecipeMatchResponse buildMatch(Recipe recipe, Set<Integer> ownedIds) {
         int total = recipe.getIngredients().size();
         int matched = (int) recipe.getIngredients().stream()
@@ -132,6 +168,10 @@ public class RecipeService {
                 .build();
     }
 
+    /**
+     * Создает новый рецепт.
+     * Сохраняет сам рецепт и список связанных ингредиентов.
+     */
     @Transactional
     public RecipeResponse create(RecipeCreateRequest request, User author) {
         Recipe recipe = new Recipe();
@@ -144,6 +184,11 @@ public class RecipeService {
         return RecipeMapper.toResponse(recipe);
     }
 
+    /**
+     * Обновляет рецепт.
+     * Полностью перезаписывает список ингредиентов (удаляет старые, добавляет новые).
+     * Проверяет права доступа (редактировать может только автор).
+     */
     @Transactional
     public RecipeResponse update(Integer recipeId, RecipeCreateRequest request, User author) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -161,6 +206,9 @@ public class RecipeService {
         return RecipeMapper.toResponse(recipe);
     }
 
+    /**
+     * Удаляет рецепт. Доступно только автору.
+     */
     @Transactional
     public void delete(Integer recipeId, User author) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -171,6 +219,9 @@ public class RecipeService {
         recipeRepository.delete(recipe);
     }
 
+    /**
+     * Изменяет статус рецепта (публикация/архивация).
+     */
     @Transactional
     public RecipeResponse changeStatus(Integer recipeId, RecipeStatus status, User author) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -184,6 +235,9 @@ public class RecipeService {
         return RecipeMapper.toResponse(recipe);
     }
 
+    /**
+     * Заполняет поля сущности рецепта из DTO запроса.
+     */
     private void applyRecipeFields(Recipe recipe, RecipeCreateRequest request, User author) {
         recipe.setUser(author);
         recipe.setTitle(request.getTitle());
@@ -210,6 +264,9 @@ public class RecipeService {
         }
     }
 
+    /**
+     * Создает набор сущностей RecipeIngredient на основе списка ID ингредиентов.
+     */
     private Set<RecipeIngredient> buildIngredients(List<RecipeIngredientRequest> ingredientRequests, Recipe recipe) {
         if (ingredientRequests == null || ingredientRequests.isEmpty()) {
             return Set.of();

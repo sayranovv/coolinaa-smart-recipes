@@ -13,6 +13,9 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис для управления единицами измерения (CRUD).
+ */
 @Service
 @RequiredArgsConstructor
 public class UnitService {

@@ -21,6 +21,10 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис для управления "Холодильником" пользователя.
+ * Позволяет добавлять продукты в личный список и отслеживать их срок годности.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserIngredientService {
@@ -29,18 +33,28 @@ public class UserIngredientService {
     private final IngredientService ingredientService;
     private final UnitService unitService;
 
+    /**
+     * Постраничный список продуктов пользователя.
+     */
     public Page<UserIngredientResponse> list(Integer userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return userIngredientRepository.findByUser_Id(userId, pageable)
                 .map(UserIngredientMapper::toResponse);
     }
 
+    /**
+     * Полный список продуктов (для алгоритмов подбора).
+     */
     public List<UserIngredientResponse> listAll(Integer userId) {
         return userIngredientRepository.findByUser_Id(userId)
                 .stream().map(UserIngredientMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Добавляет или обновляет продукт в холодильнике.
+     * Если продукт уже есть, обновляет его количество и срок годности.
+     */
     @Transactional
     public UserIngredientResponse add(User user, UserIngredientRequest request) {
         Ingredient ingredient = ingredientService.findEntity(request.getIngredientId());
@@ -60,6 +74,9 @@ public class UserIngredientService {
         return UserIngredientMapper.toResponse(userIngredientRepository.save(userIngredient));
     }
 
+    /**
+     * Удаляет продукт из списка.
+     */
     @Transactional
     public void delete(Integer userId, Integer ingredientId) {
         UserIngredient ui = userIngredientRepository.findByUser_IdAndIngredient_Id(userId, ingredientId)
