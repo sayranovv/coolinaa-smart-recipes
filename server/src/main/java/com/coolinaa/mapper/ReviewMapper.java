@@ -3,6 +3,10 @@ package com.coolinaa.mapper;
 import com.coolinaa.dto.response.ReviewResponse;
 import com.coolinaa.entity.Review;
 
+/**
+ * Маппер для преобразования сущности {@link Review} в DTO {@link ReviewResponse}.
+ * Формирует вложенный объект с информацией об авторе отзыва.
+ */
 public final class ReviewMapper {
     private ReviewMapper() {
     }

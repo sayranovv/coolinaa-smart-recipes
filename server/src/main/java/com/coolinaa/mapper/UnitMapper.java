@@ -3,6 +3,9 @@ package com.coolinaa.mapper;
 import com.coolinaa.dto.response.UnitResponse;
 import com.coolinaa.entity.Unit;
 
+/**
+ * Простой маппер для преобразования единиц измерения {@link Unit} в DTO {@link UnitResponse}.
+ */
 public final class UnitMapper {
     private UnitMapper() {
     }

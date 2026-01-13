@@ -9,6 +9,17 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
+/**
+ * Основной маппер для сущности {@link Recipe}.
+ * <p>
+ * Выполняет комплексное преобразование:
+ * <ul>
+ *   <li>Вычисляет средний рейтинг и количество отзывов.</li>
+ *   <li>Сортирует список ингредиентов по порядку (orderIndex).</li>
+ *   <li>Преобразует информацию об авторе и категории.</li>
+ * </ul>
+ * </p>
+ */
 public final class RecipeMapper {
     private RecipeMapper() {
     }

@@ -3,6 +3,10 @@ package com.coolinaa.mapper;
 import com.coolinaa.dto.response.IngredientResponse;
 import com.coolinaa.entity.Ingredient;
 
+/**
+ * Маппер для преобразования сущности {@link Ingredient} в DTO ответа {@link IngredientResponse}.
+ * Включает информацию о связанной категории (ID и название).
+ */
 public final class IngredientMapper {
     private IngredientMapper() {
     }

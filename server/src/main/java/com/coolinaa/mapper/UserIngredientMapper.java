@@ -5,6 +5,12 @@ import com.coolinaa.entity.UserIngredient;
 
 import java.time.OffsetDateTime;
 
+/**
+ * Маппер для преобразования сущности "Холодильник пользователя" {@link UserIngredient} в DTO.
+ * <p>
+ * Дополнительно вычисляет статус просроченности продукта (isExpired) на основе текущей даты.
+ * </p>
+ */
 public final class UserIngredientMapper {
     private UserIngredientMapper() {
     }

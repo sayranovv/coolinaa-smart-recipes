@@ -3,6 +3,10 @@ package com.coolinaa.mapper;
 import com.coolinaa.dto.response.RecipeIngredientResponse;
 import com.coolinaa.entity.RecipeIngredient;
 
+/**
+ * Маппер для преобразования связующей сущности {@link RecipeIngredient} в DTO {@link RecipeIngredientResponse}.
+ * Извлекает данные о названии продукта и единице измерения из связанных сущностей.
+ */
 public final class RecipeIngredientMapper {
     private RecipeIngredientMapper() {
     }

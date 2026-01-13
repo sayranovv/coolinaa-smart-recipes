@@ -3,6 +3,10 @@ package com.coolinaa.mapper;
 import com.coolinaa.dto.response.UserResponse;
 import com.coolinaa.entity.User;
 
+/**
+ * Маппер для преобразования сущности пользователя {@link User} в безопасный DTO {@link UserResponse}.
+ * Исключает чувствительные данные, такие как хеш пароля.
+ */
 public final class UserMapper {
     private UserMapper() {
     }

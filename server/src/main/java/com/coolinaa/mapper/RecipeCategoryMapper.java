@@ -3,6 +3,10 @@ package com.coolinaa.mapper;
 import com.coolinaa.dto.response.RecipeCategoryResponse;
 import com.coolinaa.entity.RecipeCategory;
 
+/**
+ * Утилитарный класс для преобразования категорий рецептов {@link RecipeCategory}
+ * в DTO {@link RecipeCategoryResponse}.
+ */
 public final class RecipeCategoryMapper {
     private RecipeCategoryMapper() {
     }
