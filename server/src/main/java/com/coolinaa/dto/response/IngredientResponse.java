@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 
+/**
+ * Полная информация об ингредиенте.
+ * Возвращается при просмотре каталога ингредиентов.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

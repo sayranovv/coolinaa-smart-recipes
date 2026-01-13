@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 
+/**
+ * DTO отзыва к рецепту.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

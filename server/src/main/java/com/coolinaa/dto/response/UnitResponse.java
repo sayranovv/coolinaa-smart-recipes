@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 
+/**
+ * Единица измерения (грамм, штука, миллилитр).
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

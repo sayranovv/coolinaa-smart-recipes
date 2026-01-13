@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+/**
+ * Полная детальная информация о рецепте.
+ * Используется для страницы просмотра рецепта.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

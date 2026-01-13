@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * Ингредиент в составе конкретного рецепта.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

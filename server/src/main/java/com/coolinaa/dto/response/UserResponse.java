@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 
+/**
+ * Публичная информация о пользователе.
+ * Не содержит паролей и других чувствительных данных.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

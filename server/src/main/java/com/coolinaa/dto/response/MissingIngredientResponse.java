@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * Информация об отсутствующем ингредиенте для приготовления рецепта.
+ * Используется в алгоритме подбора рецептов ("Что приготовить").
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

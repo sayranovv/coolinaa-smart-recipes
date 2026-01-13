@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+/**
+ * Ингредиент в наличии у пользователя ("Мой холодильник").
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Результат подбора рецепта на основе имеющихся продуктов.
+ * Показывает, насколько рецепт подходит пользователю.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
