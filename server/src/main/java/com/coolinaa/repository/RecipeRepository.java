@@ -11,6 +11,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Основной репозиторий для работы с рецептами.
+ * Реализует сложную логику выборки:
+ * - Публичные рецепты для ленты
+ * - Поиск по названию и описанию (case-insensitive)
+ * - Фильтрация по статусу и категории
+ * - Получение рецептов конкретного пользователя
+ */
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 

@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Репозиторий для работы с отзывами.
+ * Позволяет находить отзывы к конкретному рецепту, проверять наличие отзыва от пользователя
+ * и получать историю отзывов пользователя.
+ */
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 

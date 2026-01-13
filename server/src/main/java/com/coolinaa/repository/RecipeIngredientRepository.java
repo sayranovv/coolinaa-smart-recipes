@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Репозиторий для управления связями между рецептами и ингредиентами.
+ * Позволяет получать список ингредиентов конкретного рецепта или удалять их при обновлении рецепта.
+ */
 @Repository
 public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Integer> {
 

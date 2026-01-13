@@ -10,6 +10,11 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Репозиторий для управления персональным списком продуктов пользователя ("Холодильник").
+ * Поддерживает поиск продуктов конкретного пользователя, проверку на наличие
+ * и поиск просроченных продуктов.
+ */
 @Repository
 public interface UserIngredientRepository extends JpaRepository<UserIngredient, Integer> {
 

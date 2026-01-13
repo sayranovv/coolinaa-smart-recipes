@@ -6,6 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Репозиторий пользователей.
+ * Обеспечивает методы поиска пользователя для аутентификации (по username или email)
+ * и проверки уникальности учетных данных при регистрации.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);

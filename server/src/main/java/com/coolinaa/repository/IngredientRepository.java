@@ -6,6 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Репозиторий для управления ингредиентами.
+ * Поддерживает методы поиска активных ингредиентов с фильтрацией по категориям и названию,
+ * а также проверку уникальности имени.
+ */
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
 
