@@ -5,6 +5,14 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+/**
+ * Связующая сущность "Ингредиент в рецепте".
+ * <p>
+ * Реализует связь "Многие ко Многим" между рецептами и ингредиентами с дополнительными атрибутами.
+ * Определяет, сколько конкретного ингредиента (quantity + unit) нужно для конкретного рецепта.
+ * Содержит также порядок отображения ингредиента в списке (orderIndex) и специальные примечания (notes).
+ * </p>
+ */
 @Entity
 @Table(name = "recipe_ingredients", indexes = {
         @Index(name = "idx_recipe_ingredients_recipe_id", columnList = "recipe_id"),

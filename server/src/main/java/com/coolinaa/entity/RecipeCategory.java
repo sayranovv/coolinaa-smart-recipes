@@ -10,6 +10,14 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Сущность "Категория рецептов".
+ * <p>
+ * Справочник для рубрикации кулинарных рецептов (например, "Первые блюда", "Десерты", "Закуски").
+ * Помогает пользователям фильтровать рецепты в ленте.
+ * Связь "Один ко Многим" с сущностью {@link Recipe}.
+ * </p>
+ */
 @Entity
 @Table(name = "recipe_categories", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name")

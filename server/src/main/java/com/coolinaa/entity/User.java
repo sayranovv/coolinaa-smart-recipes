@@ -8,6 +8,13 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Сущность "Пользователь".
+ * <p>
+ * Хранит учетные данные (логин, email, хеш пароля), роль в системе и статус активности.
+ * Является владельцем созданных рецептов, автором отзывов и владельцем списка продуктов ("холодильника").
+ * </p>
+ */
 @Entity
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),

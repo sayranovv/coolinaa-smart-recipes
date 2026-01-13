@@ -6,6 +6,14 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+/**
+ * Сущность "Продукт пользователя" (Мой холодильник).
+ * <p>
+ * Хранит информацию о том, какие продукты есть у пользователя в наличии, в каком количестве
+ * и с каким сроком годности.
+ * Эти данные используются алгоритмом подбора рецептов ("Что приготовить из того, что есть").
+ * </p>
+ */
 @Entity
 @Table(name = "user_ingredients", indexes = {
         @Index(name = "idx_user_ingredients_user_id", columnList = "user_id")

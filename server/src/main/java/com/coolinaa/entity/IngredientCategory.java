@@ -7,6 +7,14 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Сущность "Категория ингредиентов".
+ * <p>
+ * Справочник для классификации продуктов (например, "Молочные продукты", "Бакалея", "Овощи").
+ * Позволяет группировать ингредиенты при отображении и поиске.
+ * Связь "Один ко Многим" с сущностью {@link Ingredient}.
+ * </p>
+ */
 @Entity
 @Table(name = "ingredient_categories", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name")

@@ -7,6 +7,15 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Сущность "Ингредиент".
+ * <p>
+ * Представляет собой справочник продуктов, доступных в системе (например, "Картофель", "Молоко", "Соль").
+ * Используется как базовый элемент для составления рецептов (через {@link RecipeIngredient})
+ * и для формирования списка продуктов пользователя (через {@link UserIngredient}).
+ * Каждый ингредиент относится к определенной категории (Овощи, Фрукты и т.д.).
+ * </p>
+ */
 @Entity
 @Table(name = "ingredients", indexes = {
         @Index(name = "idx_ingredients_category_id", columnList = "category_id")

@@ -9,6 +9,16 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Основная сущность "Рецепт".
+ * <p>
+ * Хранит полную информацию о блюде: название, описание, инструкции по приготовлению,
+ * время готовки, сложность и изображение.
+ * Является центральным элементом системы, связывающим автора (User), категорию (RecipeCategory)
+ * и состав блюда (RecipeIngredient).
+ * Поддерживает статусы жизненного цикла (черновик, опубликован, удален).
+ * </p>
+ */
 @Entity
 @Table(name = "recipes", indexes = {
         @Index(name = "idx_recipes_user_id", columnList = "user_id"),
